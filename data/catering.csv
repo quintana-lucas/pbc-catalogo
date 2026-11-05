@@ -1,0 +1,7 @@
+Tipo,Nombre,Descripción,Precio,Cobro
+Opción,Mesa de panificados,"Focaccia, pan casero y pan de queso para compartir",6500,por persona
+Opción,Finger food y tartas,Bocados salados y tartas en porciones chicas,9000,por persona
+Opción,Plato principal,"Un plato caliente por invitado, a elegir con nosotros",14000,por persona
+Opción,Dulces y postres,"Budines, cookies y tarta vasca",5500,por persona
+Extra,Entrega en CABA,,12000,fijo
+Extra,Armado y presentación de la mesa,,18000,fijo

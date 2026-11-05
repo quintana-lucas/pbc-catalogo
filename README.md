@@ -62,11 +62,19 @@ detalle) que arma el mensaje y lo abre en WhatsApp: no necesita servidor ni
 base de datos.
 
 - `tipos`: opciones del desplegable «¿Qué necesitás?».
-- `minimo_personas`: no deja enviar por debajo de ese número.
-- `opciones`: menús para elegir. Si tienen `precio_por_persona`, la página
-  muestra un **presupuesto estimado** (personas × precio) y lo suma al
-  mensaje. Sin precio = «a consultar». Sin opciones = solo formulario de
-  contacto.
+- `minimo_personas`: por debajo de ese número la página avisa «consultanos»,
+  pero deja enviar igual.
+- `nota`: texto chico debajo del estimado (por ejemplo, que es orientativo).
+- `catering_csv`: link CSV de una hoja de Google publicada con las opciones y
+  extras del cotizador. Vacío = usa `data/catering.csv`. Columnas: `Tipo`
+  (`Opción` o `Extra`), `Nombre`, `Descripción`, `Precio` y `Cobro` (`por
+  persona` o `fijo`; las opciones siempre van por persona).
+
+La página muestra las opciones y los extras para tildar (se pueden combinar) y
+arma un **presupuesto estimado** con el desglose, el total y el precio por
+persona. El mensaje de WhatsApp lo incluye, y hay un botón para copiar el
+resumen. Un precio vacío = «a consultar» y no suma. Sin filas = solo formulario
+de contacto.
 
 Con `"activo": false` desaparece todo rastro del módulo.
 

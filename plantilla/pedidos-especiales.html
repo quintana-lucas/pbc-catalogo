@@ -49,6 +49,12 @@
   .estimado.visible { display: block; }
   .estimado strong { font-size: 1.3rem; display: block; }
   .estimado small { color: var(--suave); }
+  .estimado .linea { display: flex; justify-content: space-between; gap: 12px; padding: 4px 0; border-bottom: 1px solid var(--linea); }
+  .estimado .linea small { display: block; }
+  .estimado .total { display: flex; justify-content: space-between; align-items: baseline; padding-top: 10px; }
+  .estimado .aviso { margin: 8px 0 0; font-weight: 600; color: var(--alerta); }
+  .btn-sec { background: transparent; color: var(--principal); border: 2px solid var(--principal); }
+  .btn-sec:hover { background: var(--fondo); }
   .btn {
     border: 0; border-radius: 999px; padding: 12px 20px; font: inherit; font-weight: 800; cursor: pointer;
     background: #25d366; color: #0b3d20; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
@@ -103,8 +109,12 @@
       </div>
     </div>
     <fieldset id="bloque-opciones" hidden>
-      <legend>Elegí una opción</legend>
+      <legend>¿Qué querés incluir?</legend>
       <div class="opciones" id="opciones"></div>
+    </fieldset>
+    <fieldset id="bloque-extras" hidden>
+      <legend>Extras</legend>
+      <div class="opciones" id="extras"></div>
     </fieldset>
     <div class="estimado" id="estimado" aria-live="polite"></div>
     <div>
@@ -116,6 +126,7 @@
       <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3Z"/></svg>
       Enviar consulta por WhatsApp
     </button>
+    <button class="btn btn-sec" type="button" id="copiar">Copiar resumen</button>
   </form>
 </main>
 
@@ -129,65 +140,105 @@
   const esc = s => String(s || "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const $ = id => document.getElementById(id);
   const minimo = DATOS.minimo_personas || 1;
-  $("personas").min = minimo;
-  $("personas").placeholder = minimo > 1 ? `Mínimo ${minimo}` : "";
+  $("personas").min = 1;
+  $("personas").placeholder = minimo > 1 ? `Desde ${minimo}` : "";
 
-  // Cotizador: si config.json trae opciones con precio por persona, se muestra un total estimado.
-  if (DATOS.opciones.length) {
-    $("bloque-opciones").hidden = false;
-    $("opciones").innerHTML = DATOS.opciones.map((o, i) => `
+  // Cotizador: opciones y extras vienen de data/catering.csv (o del link "catering_csv").
+  // Las opciones se cobran por persona; los extras, fijos o por persona. Sin precio = «A consultar».
+  const precioTexto = o => !o.precio ? "A consultar" : `${pesos(o.precio)}${o.cobro === "persona" ? " <small>/ persona</small>" : ""}`;
+  function pintar(tipo, lista, bloque, caja, marcarPrimera) {
+    if (!lista.length) return;
+    $(bloque).hidden = false;
+    $(caja).innerHTML = lista.map((o, i) => `
       <label class="opcion">
-        <input type="radio" name="opcion" value="${i}" ${i === 0 ? "checked" : ""}>
+        <input type="checkbox" name="${tipo}" value="${i}" ${marcarPrimera && i === 0 ? "checked" : ""}>
         <span><strong>${esc(o.nombre)}</strong>${o.detalle ? `<small>${esc(o.detalle)}</small>` : ""}</span>
-        ${o.precio_por_persona ? `<span class="precio">${pesos(o.precio_por_persona)} <small>/ persona</small></span>` : ""}
+        <span class="precio">${precioTexto(o)}</span>
       </label>`).join("");
   }
+  pintar("opcion", DATOS.opciones, "bloque-opciones", "opciones", true);
+  pintar("extra", DATOS.extras, "bloque-extras", "extras", false);
 
-  function opcionElegida() {
-    const marcada = document.querySelector("input[name=opcion]:checked");
-    return marcada ? DATOS.opciones[+marcada.value] : null;
-  }
-  function estimado() {
-    const o = opcionElegida();
-    const personas = parseInt($("personas").value, 10);
-    if (!o || !o.precio_por_persona || !(personas >= minimo)) return null;
-    return o.precio_por_persona * personas;
+  const marcadas = (tipo, lista) =>
+    [...document.querySelectorAll(`input[name=${tipo}]:checked`)].map(c => lista[+c.value]);
+
+  function cotizar() {
+    const personas = parseInt($("personas").value, 10) || 0;
+    const lineas = [
+      ...marcadas("opcion", DATOS.opciones),
+      ...marcadas("extra", DATOS.extras),
+    ].map(o => {
+      const porPersona = o.cobro === "persona";
+      return {
+        nombre: o.nombre,
+        detalle: o.precio && porPersona && personas ? `${personas} × ${pesos(o.precio)}` : "",
+        monto: o.precio ? (porPersona ? o.precio * personas : o.precio) : null,
+      };
+    });
+    const total = lineas.reduce((suma, l) => suma + (l.monto || 0), 0);
+    return { personas, lineas, total, porPersona: personas ? total / personas : 0 };
   }
   function actualizar() {
-    const total = estimado();
+    const q = cotizar();
     const caja = $("estimado");
-    caja.classList.toggle("visible", total != null);
-    if (total != null) caja.innerHTML = `Presupuesto estimado<strong>${pesos(total)}</strong><small>Es orientativo: lo confirmamos por WhatsApp según el menú, la fecha y la entrega.</small>`;
+    const visible = q.lineas.length > 0 && q.personas > 0;
+    caja.classList.toggle("visible", visible);
+    if (!visible) return;
+    caja.innerHTML = "<strong>Tu estimado</strong>" +
+      q.lineas.map(l => `<div class="linea"><span>${esc(l.nombre)}${l.detalle ? `<small>${esc(l.detalle)}</small>` : ""}</span><span>${l.monto == null ? "A consultar" : pesos(l.monto)}</span></div>`).join("") +
+      `<div class="total"><span>Total estimado</span><strong>${pesos(q.total)}</strong></div>` +
+      (q.total ? `<small>${pesos(q.porPersona)} por persona</small>` : "") +
+      (q.personas < minimo ? `<p class="aviso">Para menos de ${minimo} personas, consultanos.</p>` : "") +
+      (DATOS.nota ? `<small>${esc(DATOS.nota)}</small>` : "");
   }
   $("form").addEventListener("input", actualizar);
 
-  $("form").addEventListener("submit", e => {
-    e.preventDefault();
+  // Arma el mensaje de WhatsApp. Devuelve null (y muestra el error) si falta algún dato.
+  function armarMensaje() {
     const nombre = $("nombre").value.trim();
-    const personas = parseInt($("personas").value, 10);
+    const q = cotizar();
     const error = $("error");
     let falta = "";
     if (!nombre) falta = "Decinos tu nombre.";
-    else if (!(personas >= minimo)) falta = minimo > 1 ? `El mínimo es de ${minimo} personas.` : "Indicá para cuántas personas es.";
+    else if (!(q.personas >= 1)) falta = "Indicá para cuántas personas es.";
     error.textContent = falta;
     error.classList.toggle("visible", !!falta);
-    if (falta) return;
+    if (falta) return null;
 
-    const o = opcionElegida();
-    const total = estimado();
+    const opciones = marcadas("opcion", DATOS.opciones).map(o => o.nombre);
+    const extras = marcadas("extra", DATOS.extras).map(o => o.nombre);
     const fecha = $("fecha").value ? $("fecha").value.split("-").reverse().join("/") : "";
     const lineas = [
       `• Nombre: ${nombre}`,
       `• Tipo: ${$("tipo").value}`,
       fecha && `• Fecha: ${fecha}`,
-      `• Personas: ${personas}`,
-      o && `• Opción: ${o.nombre}`,
+      `• Personas: ${q.personas}`,
+      opciones.length && `• Incluye: ${opciones.join(", ")}`,
+      extras.length && `• Extras: ${extras.join(", ")}`,
       $("zona").value.trim() && `• Zona: ${$("zona").value.trim()}`,
       $("detalle").value.trim() && `• Detalle: ${$("detalle").value.trim()}`,
-      total != null && `\nPresupuesto estimado: ${pesos(total)} (a confirmar)`,
+      q.total && `\nPresupuesto estimado: ${pesos(q.total)} (a confirmar)`,
     ].filter(Boolean);
-    const texto = `${DATOS.mensaje}\n\n${lineas.join("\n")}`;
-    window.open(`https://wa.me/${DATOS.whatsapp}?text=${encodeURIComponent(texto)}`, "_blank", "noopener");
+    return `${DATOS.mensaje}\n\n${lineas.join("\n")}`;
+  }
+
+  $("form").addEventListener("submit", e => {
+    e.preventDefault();
+    const texto = armarMensaje();
+    if (texto) window.open(`https://wa.me/${DATOS.whatsapp}?text=${encodeURIComponent(texto)}`, "_blank", "noopener");
+  });
+
+  $("copiar").addEventListener("click", async () => {
+    const texto = armarMensaje();
+    if (!texto) return;
+    const boton = $("copiar");
+    try {
+      await navigator.clipboard.writeText(texto);
+      boton.textContent = "¡Copiado!";
+    } catch (_) {
+      boton.textContent = "No se pudo copiar";
+    }
+    setTimeout(() => { boton.textContent = "Copiar resumen"; }, 2000);
   });
   actualizar();
 })();
