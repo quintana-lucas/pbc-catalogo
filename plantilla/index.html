@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{{ROBOTS}}
+<title>{{TITULO}}</title>
+<meta name="description" content="{{DESCRIPCION}}">
+{{METADATOS}}
+<link rel="icon" href="assets/favicon.ico" sizes="48x48">
+<link rel="icon" href="assets/favicon-512.png" type="image/png" sizes="512x512">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+{{FUENTES}}
+<style>
+{{ESTILOS_BASE}}
+  /* Barra de filtros */
+  .barra {
+    position: sticky; top: 0; z-index: 5;
+    background: var(--fondo);
+    background: color-mix(in srgb, var(--fondo) 92%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--linea);
+  }
+  .barra .envoltura { display: flex; flex-wrap: wrap; gap: 10px; padding-top: 12px; padding-bottom: 12px; align-items: center; }
+  .chips { display: flex; gap: 8px; overflow-x: auto; flex: 1 1 auto; scrollbar-width: none; }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip {
+    border: 1px solid var(--linea); background: var(--papel); color: var(--tinta);
+    padding: 8px 16px; border-radius: 999px; font: inherit; font-weight: 600;
+    cursor: pointer; white-space: nowrap;
+  }
+  .chip[aria-pressed="true"] { background: var(--tinta); color: #fff; border-color: var(--tinta); }
+  .buscar {
+    flex: 1 1 200px; max-width: 280px;
+    border: 1px solid var(--linea); border-radius: 999px; padding: 9px 16px;
+    font: inherit; background: var(--papel);
+  }
+
+  /* Catálogo */
+  main.envoltura { padding-top: 24px; padding-bottom: 56px; }
+  .aviso {
+    background: var(--papel); border-left: 4px solid var(--secundario);
+    padding: 12px 16px; border-radius: 10px; margin-bottom: 24px; color: var(--suave);
+  }
+  h2.cat {
+    font-family: var(--fuente-titulos), Georgia, serif; font-size: 1.6rem;
+    margin: 32px 0 14px; display: flex; align-items: center; gap: 10px;
+  }
+  .grilla { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; }
+  .tarjeta {
+    background: var(--papel); border-radius: var(--radio); box-shadow: var(--sombra);
+    overflow: hidden; display: flex; flex-direction: column; position: relative;
+  }
+  /* Ícono "i" y globo con la descripción: solo en celular, donde la descripción se oculta */
+  .btn-info, .globo-info { display: none; }
+  .foto {
+    aspect-ratio: 4 / 3; display: grid; place-items: center; position: relative; overflow: hidden; flex-shrink: 0;
+    font-size: 4rem; background: color-mix(in srgb, var(--fondo) 70%, var(--linea));
+  }
+  /* Las fotos son de paquetes enteros: se muestran completas sobre blanco, sin recortar. */
+  .foto:has(img) { background: #fff; }
+  /* El emoji va siempre debajo de la foto y se muestra solo si la imagen no carga (link caído, archivo borrado) */
+  .foto:has(img) .sin-foto { display: none; }
+  .foto.rota { background: color-mix(in srgb, var(--fondo) 70%, var(--linea)); }
+  .foto.rota img { display: none; }
+  .foto.rota .sin-foto { display: inline; }
+  /* Posición absoluta: Safari de iOS viejos calculaba mal el 100% de alto dentro de la grilla y la foto se salía */
+  .foto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 8px; }
+  .cuerpo { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
+  .cuerpo h3 { margin: 0; font-size: 1.1rem; }
+  .pres { color: var(--suave); font-size: .9rem; font-weight: 600; }
+  .desc { color: var(--suave); font-size: .92rem; margin: 2px 0 10px; }
+  .pie { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .precio { font-weight: 800; font-size: 1.2rem; }
+  .precio.consultar { font-size: .95rem; color: var(--suave); }
+  .btn {
+    border: 0; border-radius: 999px; padding: 9px 16px; font: inherit; font-weight: 800;
+    background: var(--principal); color: #fff; cursor: pointer;
+  }
+  .btn:hover { background: var(--principal-osc); }
+  .cantidad { display: flex; align-items: center; gap: 4px; background: var(--fondo); border-radius: 999px; padding: 3px; }
+  .cantidad button {
+    width: 32px; height: 32px; border-radius: 50%; border: 0; background: var(--papel);
+    font-size: 1.1rem; font-weight: 800; cursor: pointer; color: var(--tinta);
+  }
+  .cantidad span { min-width: 22px; text-align: center; font-weight: 800; }
+  .agotado { opacity: .55; }
+  .agotado .foto { filter: grayscale(1); }
+  .etiqueta-agotado {
+    font-size: .8rem; font-weight: 800; color: var(--alerta);
+    text-transform: uppercase; letter-spacing: .04em;
+  }
+  .vacio { text-align: center; color: var(--suave); padding: 40px 0; }
+
+  /* Aviso de pedidos especiales / catering (solo si el módulo está activo en config.json) */
+  .banner-pedidos {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+    background: var(--papel); border: 1px solid var(--linea); border-radius: 12px;
+    padding: 12px 16px; margin: -8px 0 24px;
+  }
+  .banner-pedidos p { margin: 0; font-weight: 600; }
+  .banner-pedidos a { text-decoration: none; }
+
+  /* Pedido flotante */
+  .pedido {
+    position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 10;
+    max-width: 560px; margin: 0 auto;
+    background: var(--tinta); color: #fff; border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    padding: 12px 12px 12px 18px; display: none; align-items: center; gap: 12px;
+  }
+  .pedido.visible { display: flex; }
+  .pedido .resumen { flex: 1; font-size: .95rem; }
+  .pedido .resumen strong { display: block; font-size: 1.1rem; }
+  .btn-wa { background: #25d366; color: #0b3d20; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
+  .btn-wa:hover { background: #1fbe5b; }
+  .btn-vaciar { background: transparent; color: #fff; opacity: .7; padding: 9px 10px; }
+
+  /* Modal de ¿Quiénes somos? (solo si QUIENES_SOMOS=modal) */
+  .modal {
+    width: min(560px, calc(100vw - 32px)); max-height: calc(100vh - 32px);
+    border: 0; border-radius: var(--radio); padding: 0;
+    color: var(--tinta); background: var(--papel); box-shadow: 0 10px 40px rgba(0,0,0,.3);
+  }
+  .modal::backdrop { background: rgba(0,0,0,.5); }
+  .modal .contenido { padding: 24px; }
+  .modal h2 { font-family: var(--fuente-titulos), Georgia, serif; font-size: 1.6rem; margin: 0 40px 14px 0; }
+  .modal .cerrar {
+    position: absolute; top: 14px; right: 14px; width: 36px; height: 36px; border-radius: 50%;
+    border: 0; background: var(--fondo); color: var(--tinta); font-size: 1.3rem; line-height: 1; cursor: pointer;
+  }
+  .modal .cerrar:hover { background: var(--linea); }
+
+  @media (max-width: 480px) {
+    .grilla { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .foto { font-size: 2.8rem; }
+    .cuerpo { padding: 10px 12px 12px; }
+    .cuerpo h3 { font-size: 1rem; }
+    .desc { display: none; }
+    .btn-info {
+      display: grid; place-items: center; position: absolute; top: 6px; right: 6px; z-index: 3;
+      width: 36px; height: 36px; border: 0; background: none; padding: 0; cursor: pointer;
+      color: var(--principal);  /* el borde del ícono */
+    }
+    .btn-info circle { fill: var(--papel); }  /* relleno blanco para que se lea sobre la foto */
+    .btn-info[aria-expanded="true"] circle { fill: var(--principal); }
+    .btn-info[aria-expanded="true"] path { stroke: var(--papel); }
+    .globo-info {
+      position: absolute; top: 46px; left: 8px; right: 8px; z-index: 2;
+      background: var(--tinta); color: #fff; border-radius: 10px; padding: 10px 12px;
+      font-size: .85rem; line-height: 1.35; box-shadow: 0 6px 18px rgba(0,0,0,.2);
+    }
+    .globo-info::before {  /* flechita que apunta al ícono */
+      content: ""; position: absolute; top: -6px; right: 14px;
+      border: 6px solid transparent; border-top: 0; border-bottom-color: var(--tinta);
+    }
+    .globo-info.visible { display: block; }
+    .pie { flex-direction: column; align-items: stretch; }
+    .pie .btn, .cantidad { justify-content: space-between; }
+    .pie [data-ctrl] { display: flex; justify-content: center; }  /* botón, cantidad y "Sin stock" centrados en la tarjeta */
+    .buscar { max-width: none; }
+    .pedido { padding: 10px 10px 10px 14px; gap: 6px; }
+    .pedido .resumen { font-size: .85rem; line-height: 1.25; }
+    .pedido .resumen strong { font-size: 1rem; }
+    .btn-vaciar { font-size: .85rem; padding: 8px 6px; }
+    .btn-wa { padding: 10px 14px; white-space: nowrap; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="envoltura">
+    {{SELLOS}}
+    <h1 class="marca"><img class="logo" src="{{LOGO}}" alt="{{NOMBRE}}" width="{{LOGO_ANCHO}}" height="{{LOGO_ALTO}}"></h1>
+    <nav class="redes" aria-label="Redes">{{REDES}}</nav>
+  </div>
+</header>
+
+<div class="barra">
+  <div class="envoltura">
+    <div class="chips" id="chips" role="toolbar" aria-label="Categorías"></div>
+    <input class="buscar" id="buscar" type="search" placeholder="Buscar producto…" aria-label="Buscar producto">
+  </div>
+</div>
+
+<main class="envoltura">
+  <div class="aviso">{{AVISO}}</div>
+{{BANNER_PEDIDOS}}
+  <div id="catalogo"></div>
+</main>
+
+<footer>Catálogo actualizado el {{ACTUALIZADO}}{{PIE}}</footer>
+{{MODAL_QUIENES}}
+
+<div class="pedido" id="pedido" aria-live="polite">
+  <div class="resumen" id="resumen"></div>
+  <button class="btn btn-vaciar" id="vaciar" type="button">Vaciar</button>
+  <a class="btn btn-wa" id="enviar" href="#" target="_blank" rel="noopener">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3Z"/></svg>
+    Enviar pedido
+  </a>
+</div>
+
+<script id="datos" type="application/json">{{DATOS}}</script>
+<script>
+(function () {
+  const DATOS = JSON.parse(document.getElementById("datos").textContent);
+  const sinTildes = s => (s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  // Emojis de config.json: se muestran cuando un producto no tiene foto (o no carga) y al lado de cada categoría.
+  // Para el producto se revisan las claves en orden y gana la primera que esté en el nombre.
+  const EMOJIS = DATOS.emojis_producto || {};
+  const EMOJI_CAT = Object.fromEntries(Object.entries(DATOS.emojis_categoria || {}).map(([k, v]) => [sinTildes(k), v]));
+  const EMOJI_DEFECTO = DATOS.emoji_por_defecto || "🛒";
+
+  const pesos = n => "$" + n.toLocaleString("es-AR");
+  const esc = s => String(s || "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+  function emojiPara(p) {
+    const n = sinTildes(p.nombre);
+    for (const clave in EMOJIS) if (n.includes(sinTildes(clave))) return EMOJIS[clave];
+    return EMOJI_CAT[sinTildes(p.categoria)] || EMOJI_DEFECTO;
+  }
+  function fotoPara(p) {
+    const emoji = `<span class="sin-foto" aria-hidden="true">${emojiPara(p)}</span>`;
+    if (!p.foto) return emoji;
+    const src = /^https?:\/\//.test(p.foto) ? p.foto : "img/" + p.foto;
+    return `${emoji}<img src="${esc(src)}" alt="${esc(p.nombre)}" loading="lazy" onerror="this.parentNode.classList.add('rota')">`;
+  }
+
+  // Estado
+  // El id sale del nombre y la presentación (no de la posición en la planilla),
+  // así un carrito guardado sigue apuntando al mismo producto si se reordenan filas.
+  // Si el mismo producto está en dos categorías (por ejemplo en Ofertas y en Verduras), el segundo
+  // suma la categoría al id para que el carrito no los confunda.
+  const vistos = new Set();
+  const productos = DATOS.productos.map(p => {
+    let id = sinTildes(p.nombre + "|" + (p.presentacion || ""));
+    if (vistos.has(id)) id = sinTildes(p.categoria + "|" + id);
+    vistos.add(id);
+    return { ...p, id };
+  });
+  const porId = Object.fromEntries(productos.map(p => [p.id, p]));
+  let filtro = "Todos";
+  let busqueda = "";
+  let carrito = {};
+  try { carrito = JSON.parse(localStorage.getItem("carrito-v2") || "{}"); } catch (e) { carrito = {}; }
+  // Quita del carrito lo que ya no existe o se agotó
+  for (const id in carrito) {
+    const p = porId[id];
+    if (!p || !p.disponible) delete carrito[id];
+  }
+  function guardar() { try { localStorage.setItem("carrito-v2", JSON.stringify(carrito)); } catch (e) {} }
+
+  // Chips de categorías
+  const chips = document.getElementById("chips");
+  ["Todos", ...DATOS.categorias].forEach(cat => {
+    const b = document.createElement("button");
+    b.className = "chip"; b.type = "button"; b.textContent = cat;
+    b.setAttribute("aria-pressed", cat === filtro);
+    b.onclick = () => { filtro = cat; [...chips.children].forEach(c => c.setAttribute("aria-pressed", c === b)); pintar(); };
+    chips.appendChild(b);
+  });
+  document.getElementById("buscar").addEventListener("input", e => { busqueda = sinTildes(e.target.value); pintar(); });
+
+  function controles(p) {
+    if (!p.disponible) return `<span class="etiqueta-agotado">Sin stock</span>`;
+    const c = carrito[p.id] || 0;
+    if (!c) return `<button class="btn" data-mas="${esc(p.id)}" type="button">Agregar</button>`;
+    return `<div class="cantidad">
+      <button data-menos="${esc(p.id)}" type="button" aria-label="Quitar uno">−</button>
+      <span>${c}</span>
+      <button data-mas="${esc(p.id)}" type="button" aria-label="Agregar uno">+</button>
+    </div>`;
+  }
+
+  let contadorGlobos = 0;
+  function cerrarGlobos(excepto) {
+    document.querySelectorAll(".btn-info[aria-expanded='true']").forEach(b => {
+      if (b === excepto) return;
+      b.setAttribute("aria-expanded", "false");
+      document.getElementById(b.dataset.info).classList.remove("visible");
+    });
+  }
+
+  function tarjeta(p) {
+    const precio = p.precio != null
+      ? `<span class="precio">${pesos(p.precio)}</span>`
+      : `<span class="precio consultar">Consultar</span>`;
+    const idGlobo = "info-" + (++contadorGlobos);
+    const info = p.descripcion
+      ? `<button class="btn-info" type="button" data-info="${idGlobo}" aria-expanded="false" aria-controls="${idGlobo}" aria-label="Ver descripción de ${esc(p.nombre)}">
+          <!-- Ícono "info" de Lucide (lucide.dev, licencia ISC) -->
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+        </button>
+        <div class="globo-info" id="${idGlobo}" role="note">${esc(p.descripcion)}</div>`
+      : "";
+    return `<article class="tarjeta ${p.disponible ? "" : "agotado"}">
+      ${info}
+      <div class="foto">${fotoPara(p)}</div>
+      <div class="cuerpo">
+        <h3>${esc(p.nombre)}</h3>
+        ${p.presentacion ? `<div class="pres">${esc(p.presentacion)}</div>` : ""}
+        ${p.descripcion ? `<p class="desc">${esc(p.descripcion)}</p>` : ""}
+        <div class="pie">${precio}<div data-ctrl="${esc(p.id)}">${controles(p)}</div></div>
+      </div>
+    </article>`;
+  }
+
+  function pintar() {
+    const visibles = productos.filter(p =>
+      (filtro === "Todos" || p.categoria === filtro) &&
+      (!busqueda || sinTildes(p.nombre + " " + p.descripcion).includes(busqueda))
+    );
+    const cont = document.getElementById("catalogo");
+    if (!visibles.length) { cont.innerHTML = `<p class="vacio">No encontramos productos con esa búsqueda.</p>`; return; }
+    const cats = filtro === "Todos" ? DATOS.categorias : [filtro];
+    cont.innerHTML = cats.map(cat => {
+      const items = visibles.filter(p => p.categoria === cat);
+      if (!items.length) return "";
+      return `<section><h2 class="cat"><span aria-hidden="true">${EMOJI_CAT[sinTildes(cat)] || EMOJI_DEFECTO}</span>${esc(cat)}</h2>
+        <div class="grilla">${items.map(tarjeta).join("")}</div></section>`;
+    }).join("");
+  }
+
+  function actualizarPedido() {
+    const items = Object.entries(carrito).filter(([, c]) => c > 0).map(([id, c]) => ({ p: porId[id], c }));
+    const caja = document.getElementById("pedido");
+    if (!items.length) { caja.classList.remove("visible"); return; }
+    const unidades = items.reduce((s, x) => s + x.c, 0);
+    const conPrecio = items.filter(x => x.p.precio != null);
+    const total = conPrecio.reduce((s, x) => s + x.c * x.p.precio, 0);
+    const parcial = conPrecio.length < items.length;
+    document.getElementById("resumen").innerHTML =
+      `<strong>${pesos(total)}</strong>${parcial ? "+ a consultar · " : ""}${unidades} ${unidades === 1 ? "producto" : "productos"}`;
+
+    // Si un producto está en Ofertas (o en otra categoría destacada) y en la suya, la marca evita que se confundan las dos líneas
+    const lineas = items.map(x => `• ${x.c} × ${x.p.nombre}${x.p.presentacion ? " (" + x.p.presentacion + ")" : ""}` +
+      (DATOS.repetidos.includes(x.p.categoria) ? ` [${x.p.categoria}]` : "") +
+      (x.p.precio != null ? ` — ${pesos(x.c * x.p.precio)}` : " — a consultar"));
+    const texto = `${DATOS.mensaje}\n\n${lineas.join("\n")}\n\nTotal estimado: ${pesos(total)}${parcial ? " + productos a consultar" : ""}`;
+    document.getElementById("enviar").href = `https://wa.me/${DATOS.whatsapp}?text=${encodeURIComponent(texto)}`;
+    caja.classList.add("visible");
+  }
+
+  document.getElementById("catalogo").addEventListener("click", e => {
+    const info = e.target.closest("[data-info]");
+    if (info) {
+      const abrir = info.getAttribute("aria-expanded") !== "true";
+      cerrarGlobos(info);
+      info.setAttribute("aria-expanded", abrir);
+      document.getElementById(info.dataset.info).classList.toggle("visible", abrir);
+      return;
+    }
+    const mas = e.target.closest("[data-mas]"), menos = e.target.closest("[data-menos]");
+    if (!mas && !menos) return;
+    const id = (mas || menos).dataset.mas ?? (mas || menos).dataset.menos;
+    carrito[id] = Math.max(0, (carrito[id] || 0) + (mas ? 1 : -1));
+    if (!carrito[id]) delete carrito[id];
+    guardar();
+    document.querySelector(`[data-ctrl="${CSS.escape(id)}"]`).innerHTML = controles(porId[id]);
+    actualizarPedido();
+  });
+  // Tocar fuera del ícono o apretar Escape cierra el globo abierto
+  document.addEventListener("click", e => { if (!e.target.closest("[data-info]")) cerrarGlobos(); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") cerrarGlobos(); });
+  document.getElementById("vaciar").onclick = () => { carrito = {}; guardar(); pintar(); actualizarPedido(); };
+
+  // ¿Quiénes somos? en modal (si está configurado como página, el botón es un link y no hay modal)
+  const modal = document.getElementById("quienes");
+  if (modal) {
+    document.querySelector("[data-abrir-quienes]").onclick = () =>
+      modal.showModal ? modal.showModal() : modal.setAttribute("open", "");  // Safari < 15.4 no tiene showModal
+    modal.querySelector(".cerrar").onclick = () => modal.close ? modal.close() : modal.removeAttribute("open");
+    // Tocar el fondo oscuro también lo cierra (Escape lo cierra solo)
+    modal.addEventListener("click", e => { if (e.target === modal) modal.close(); });
+  }
+
+  pintar();
+  actualizarPedido();
+})();
+</script>
+</body>
+</html>
