@@ -1,53 +1,52 @@
 {
-  "nombre": "Cocina de Ejemplo",
-  "eslogan": "Comidas caseras listas para calentar",
-  "descripcion": "Comidas preparadas caseras: tartas, pastas, guisos y viandas. Elegí lo que querés y mandanos el pedido por WhatsApp.",
-  "whatsapp": "5491100000000",
-  "instagram": "",
-  "planilla_csv": "",
+  "nombre": "Planta Baja Cocina",
+  "eslogan": "Hecho con amor",
+  "descripcion": "Comida casera hecha con amor: menú de la semana, tartas, postres, platos premium al vacío, panadería y sopitas. Elegí lo que querés y mandanos el pedido por WhatsApp.",
+  "whatsapp": "5491112345678",
+  "instagram": "https://www.instagram.com/pbcocina/",
+  "planilla_csv": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQPeB6BmJa0FuAybB6Vauy5HIo9hF5hwg5uTgTsSLDURF9PQV3LRW-WYUivofyltmVoFGseb1d0Wb6O/pub?gid=0&single=true&output=csv",
   "dominio": "",
   "indexar": false,
 
   "logo": { "archivo": "assets/logo.svg", "ancho": 800, "alto": 300 },
   "colores": {
-    "principal": "#a4471f",
-    "principal_oscuro": "#7f3616",
-    "secundario": "#e2a33a",
-    "fondo": "#faf5ee",
-    "tarjetas": "#ffffff",
-    "texto": "#2b231e",
-    "texto_suave": "#6b5d53",
-    "bordes": "#ecdfd0",
-    "alerta": "#c62f3c"
+    "principal": "#24462f",
+    "principal_oscuro": "#1a3523",
+    "secundario": "#e3a92f",
+    "fondo": "#f7f0e1",
+    "tarjetas": "#fbf8f1",
+    "texto": "#2a2a24",
+    "texto_suave": "#625c4c",
+    "bordes": "#d6d0c3",
+    "alerta": "#8c2f35"
   },
-  "fuentes": { "titulos": "Fraunces", "texto": "Nunito Sans" },
-  "sellos": [
-    { "texto": "Caseras", "emoji": "🏠" },
-    { "texto": "Listas en 10'", "emoji": "⏱️", "detalle": "Se calientan en horno o microondas" }
-  ],
+  "fuentes": { "titulos": "Bricolage Grotesque", "texto": "Figtree" },
+  "sellos": [],
 
   "mensaje_pedido": "¡Hola! Quiero hacer este pedido:",
   "aviso": "Tocá «Agregar» en los platos que quieras y ajustá las cantidades con − y +. Cuando termines, tocá «Enviar pedido»: se abre WhatsApp con tu pedido ya escrito. Ahí coordinamos la entrega.",
   "pie": "Precios sujetos a disponibilidad",
 
-  "categorias_primero": ["Ofertas"],
+  "categorias_primero": ["Menú de la semana"],
   "emojis_categoria": {
-    "Ofertas": "🔥", "Tartas": "🥧", "Pastas": "🍝", "Guisos": "🍲", "Viandas": "🍱", "Postres": "🍮"
+    "Menú de la semana": "📅", "Tartas": "🥧", "Postres": "🍮", "Platos premium al vacío": "🥩", "Panadería": "🥖", "Sopitas": "🍲"
   },
   "emojis_producto": {
     "tarta": "🥧", "empanada": "🥟", "lasagna": "🍝", "ravioles": "🥟", "ñoquis": "🍝", "canelones": "🍝",
-    "guiso": "🍲", "locro": "🍲", "milanesa": "🍖", "pollo": "🍗", "ensalada": "🥗", "flan": "🍮", "budin": "🍰"
+    "guiso": "🍲", "locro": "🍲", "sopa": "🍲", "crema": "🍲", "milanesa": "🍖", "pollo": "🍗", "ensalada": "🥗",
+    "flan": "🍮", "budin": "🍰", "pan": "🥖", "bolleria": "🥐", "medialuna": "🥐"
   },
   "emoji_por_defecto": "🍽️",
 
   "quienes_somos": [
-    "Somos una cocina familiar que prepara comidas caseras para que comas rico sin cocinar.",
-    "Cocinamos todos los días con ingredientes frescos y te lo llevamos listo para calentar."
+    "En PBC cocinamos comida casera como la de casa: recetas de siempre, ingredientes frescos y mucho cariño en cada plato.",
+    "Todas las semanas armamos un menú nuevo, y además hacemos tartas, postres, panadería, sopitas y platos premium envasados al vacío para que tengas siempre algo rico en la heladera.",
+    "Todo está hecho con amor. Elegí lo que quieras y mandanos tu pedido por WhatsApp."
   ],
   "quienes_somos_modo": "modal",
 
   "pedidos_especiales": {
-    "activo": true,
+    "activo": false,
     "titulo": "Pedidos especiales y catering",
     "texto": "¿Tenés un evento, una reunión de trabajo o querés algo que no está en el catálogo? Completá esto y te mandamos el presupuesto por WhatsApp.",
     "banner": "¿Catering, un evento o un pedido especial?",
