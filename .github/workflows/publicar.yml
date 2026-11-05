@@ -19,6 +19,9 @@ on:
 
 permissions:
   contents: read
+  # Necesarios para publicar en GitHub Pages
+  pages: write
+  id-token: write
 
 concurrency:
   group: publicar
@@ -28,6 +31,9 @@ concurrency:
 jobs:
   publicar:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
 
@@ -49,9 +55,13 @@ jobs:
           QUIENES_SOMOS: ${{ vars.QUIENES_SOMOS }}
         run: python build.py
 
-      # El sitio terminado queda en _site/ y se guarda como archivo de la corrida.
+      # El sitio terminado queda en _site/ y se publica en GitHub Pages.
+      # (Requiere Settings → Pages → Source: GitHub Actions.)
       - if: steps.build.outputs.publicar == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-pages-artifact@v3
         with:
-          name: sitio
           path: _site
+
+      - id: deploy
+        if: steps.build.outputs.publicar == 'true'
+        uses: actions/deploy-pages@v4
