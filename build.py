@@ -101,6 +101,40 @@ def leer_csv(config):
     return list(lector)
 
 
+def leer_catering(config):
+    """Opciones y extras del cotizador. Salen del link "catering_csv" (Google Sheets publicada como CSV)
+    o, si está vacío, de data/catering.csv. Columnas: Tipo (Opción o Extra), Nombre, Descripción, Precio
+    y Cobro (por persona o fijo; las opciones siempre se cobran por persona)."""
+    url = config.get("pedidos_especiales", {}).get("catering_csv", "").strip()
+    if url:
+        print(f"Descargando cotizador desde {url[:60]}...")
+        with urllib.request.urlopen(url, timeout=30) as r:
+            texto = r.read().decode("utf-8-sig")
+    else:
+        print("Usando data/catering.csv")
+        texto = (RAIZ / "data" / "catering.csv").read_text(encoding="utf-8-sig")
+    opciones, extras = [], []
+    for fila in csv.DictReader(io.StringIO(texto)):
+        campos = {normalizar(k): (v or "").strip() for k, v in fila.items() if k}
+        nombre = campos.get("nombre", "")
+        if not nombre:
+            continue
+        tipo = normalizar(campos.get("tipo", ""))
+        if tipo not in ("opcion", "extra"):
+            print(f"::warning::Cotizador: «{nombre}» tiene Tipo «{campos.get('tipo', '')}»; tiene que ser Opción o Extra. Se ignora.")
+            continue
+        persona = tipo == "opcion" or normalizar(campos.get("cobro", "")).endswith("persona")
+        (opciones if tipo == "opcion" else extras).append({
+            "nombre": nombre,
+            "detalle": campos.get("descripcion", ""),
+            "precio": parsear_precio(campos.get("precio", "")) or 0,
+            "cobro": "persona" if persona else "fijo",
+        })
+    if not opciones:
+        print("::warning::El cotizador no tiene ninguna fila de tipo Opción.")
+    return {"opciones": opciones, "extras": extras}
+
+
 def parsear_precio(valor):
     limpio = (valor or "").replace("$", "").replace(".", "").replace(",", ".").strip()
     try:
@@ -355,8 +389,9 @@ def pagina_pedidos(config, comunes, quienes):
     datos = {
         "whatsapp": config["whatsapp"],
         "mensaje": modulo.get("mensaje", "¡Hola! Quiero consultar por un pedido especial:"),
-        "opciones": modulo.get("opciones", []),
+        **leer_catering(config),
         "minimo_personas": modulo.get("minimo_personas", 1),
+        "nota": modulo.get("nota", ""),
     }
     return rellenar(PAGINA_PEDIDOS, {
         **comunes,
