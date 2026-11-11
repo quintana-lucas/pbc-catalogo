@@ -13,59 +13,73 @@
 {{FUENTES}}
 <style>
 {{ESTILOS_BASE}}
-  /* Módulo opcional de pedidos especiales / catering (solo si "pedidos_especiales.activo" en config.json) */
-  main.envoltura { max-width: 720px; padding-top: 24px; padding-bottom: 56px; }
+  /* Módulo opcional de pedidos especiales / catering (solo si "pedidos_especiales.activo" en config.json).
+     Cotizador: se eligen invitados, opciones y extras; al lado, una «comanda» con el estimado. */
+  main.envoltura { max-width: 1040px; padding-top: 24px; padding-bottom: 56px; }
   .volver { color: var(--principal); font-weight: 800; text-decoration: none; }
   .volver:hover { text-decoration: underline; }
-  main h1 { font-family: var(--fuente-titulos), Georgia, serif; font-size: 2rem; margin: 20px 0 8px; }
-  .intro { color: var(--suave); margin: 0 0 20px; }
-  form {
-    background: var(--papel); border-radius: var(--radio); box-shadow: var(--sombra);
-    padding: 20px 24px; display: grid; gap: 16px;
+  main h1 { font-family: var(--fuente-titulos), Georgia, serif; font-size: 2rem; margin: 20px 0 8px; color: var(--principal); }
+  .intro { color: var(--suave); margin: 0 0 28px; max-width: 62ch; }
+  .cotizador { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 40px; align-items: start; }
+  fieldset { border: 0; margin: 0 0 28px; padding: 0; min-width: 0; }
+  legend {
+    font-family: var(--fuente-titulos), Georgia, serif; font-weight: 800; font-size: 1.25rem;
+    color: var(--principal); padding: 0; margin-bottom: 12px;
   }
-  .fila { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  label, legend { font-weight: 800; display: block; margin-bottom: 6px; }
-  .opcional { font-weight: 400; color: var(--suave); }
-  input, select, textarea {
-    width: 100%; font: inherit; color: var(--tinta); background: var(--papel);
-    border: 1px solid var(--linea); border-radius: 10px; padding: 10px 12px;
-  }
-  textarea { min-height: 96px; resize: vertical; }
-  fieldset { border: 0; margin: 0; padding: 0; }
-  .opciones { display: grid; gap: 8px; }
+  .opciones { display: grid; gap: 10px; }
   .opcion {
-    display: flex; gap: 12px; align-items: flex-start; font-weight: 400; margin: 0;
-    border: 1px solid var(--linea); border-radius: 12px; padding: 12px; cursor: pointer;
+    display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; cursor: pointer;
+    background: var(--papel); border: 1.5px solid var(--linea); border-radius: 14px;
   }
   .opcion:has(input:checked) { border-color: var(--principal); box-shadow: 0 0 0 1px var(--principal); }
-  .opcion input { width: auto; margin-top: 4px; accent-color: var(--principal); }
-  .opcion strong { display: block; }
-  .opcion small { color: var(--suave); }
-  .opcion .precio { margin-left: auto; font-weight: 800; white-space: nowrap; }
-  .estimado {
-    background: var(--fondo); border-left: 4px solid var(--secundario); border-radius: 10px;
-    padding: 12px 16px; display: none;
+  .opcion input { width: 20px; height: 20px; margin: 3px 0 0; flex: none; accent-color: var(--principal); }
+  .opcion .texto { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+  .opcion strong { font-weight: 700; }
+  .opcion small { color: var(--suave); font-size: .9rem; }
+  .opcion .precio { font-weight: 800; white-space: nowrap; text-align: right; font-size: .92rem; font-variant-numeric: tabular-nums; }
+  .campos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .campo { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .campo label { font-weight: 700; font-size: .95rem; }
+  .campo small { color: var(--suave); }
+  input[type=number], input[type=date], input[type=text] {
+    width: 100%; min-width: 0; font: inherit; color: var(--tinta); background: var(--papel);
+    border: 1.5px solid var(--linea); border-radius: 10px; padding: 11px 13px;
   }
-  .estimado.visible { display: block; }
-  .estimado strong { font-size: 1.3rem; display: block; }
-  .estimado small { color: var(--suave); }
-  .estimado .linea { display: flex; justify-content: space-between; gap: 12px; padding: 4px 0; border-bottom: 1px solid var(--linea); }
-  .estimado .linea small { display: block; }
-  .estimado .total { display: flex; justify-content: space-between; align-items: baseline; padding-top: 10px; }
-  .estimado .aviso { margin: 8px 0 0; font-weight: 600; color: var(--alerta); }
-  .btn-sec { background: transparent; color: var(--principal); border: 2px solid var(--principal); }
-  .btn-sec:hover { background: var(--fondo); }
+  /* La comanda: papel con el borde de abajo dentado, como un ticket */
+  .comanda {
+    position: relative; background: var(--papel); padding: 26px 24px 40px;
+    border: 1.5px solid var(--linea); border-bottom: 0;
+    -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 18px 100%;
+    mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 18px 100%;
+  }
+  .comanda h2 { font-family: var(--fuente-titulos), Georgia, serif; font-size: 1.6rem; color: var(--principal); margin: 0 0 10px; }
+  .linea { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 9px 0; border-bottom: 1.5px dashed var(--linea); }
+  .linea .nombre { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+  .linea small { color: var(--suave); }
+  .monto { font-weight: 800; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .total { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding-top: 16px; }
+  .total span:first-child { font-weight: 700; }
+  .total .monto { font-family: var(--fuente-titulos), Georgia, serif; font-size: 2rem; line-height: 1; color: var(--principal); }
+  .por-persona, .nota, .vacio, .aviso { margin: 8px 0 0; font-size: .92rem; color: var(--suave); }
+  .aviso { color: var(--alerta); font-weight: 700; }
+  .acciones { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
   .btn {
-    border: 0; border-radius: 999px; padding: 12px 20px; font: inherit; font-weight: 800; cursor: pointer;
+    border: 0; border-radius: 999px; padding: 13px 22px; font: inherit; font-weight: 800; cursor: pointer; text-decoration: none;
     background: #25d366; color: #0b3d20; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   }
   .btn:hover { background: #1fbe5b; }
-  .error { color: var(--alerta); font-weight: 600; margin: 0; display: none; }
-  .error.visible { display: block; }
+  .btn-sec { background: transparent; color: var(--principal); box-shadow: inset 0 0 0 2px var(--principal); }
+  .btn-sec:hover { background: var(--fondo); }
+  .copia {
+    width: 100%; min-height: 120px; font: inherit; color: var(--tinta); background: var(--fondo);
+    border: 1.5px solid var(--linea); border-radius: 10px; padding: 10px;
+  }
   footer { padding-bottom: 32px; }
+  @media (max-width: 760px) {
+    .cotizador { grid-template-columns: 1fr; gap: 8px; }
+  }
   @media (max-width: 480px) {
-    form { padding: 16px; }
-    .fila { grid-template-columns: 1fr; }
+    .campos { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -83,51 +97,39 @@
   <h1>{{PEDIDOS_TITULO}}</h1>
   <p class="intro">{{PEDIDOS_TEXTO}}</p>
 
-  <form id="form" novalidate>
-    <div>
-      <label for="nombre">Tu nombre</label>
-      <input id="nombre" name="nombre" autocomplete="name" required>
-    </div>
-    <div class="fila">
-      <div>
-        <label for="tipo">¿Qué necesitás?</label>
-        <select id="tipo" name="tipo">{{PEDIDOS_TIPOS}}</select>
-      </div>
-      <div>
-        <label for="fecha">Fecha <span class="opcional">(aprox.)</span></label>
-        <input id="fecha" name="fecha" type="date">
-      </div>
-    </div>
-    <div class="fila">
-      <div>
-        <label for="personas">Cantidad de personas</label>
-        <input id="personas" name="personas" type="number" inputmode="numeric" min="1" step="1">
-      </div>
-      <div>
-        <label for="zona">Zona o dirección <span class="opcional">(opcional)</span></label>
-        <input id="zona" name="zona" autocomplete="address-level2">
-      </div>
-    </div>
-    <fieldset id="bloque-opciones" hidden>
-      <legend>¿Qué querés incluir?</legend>
-      <div class="opciones" id="opciones"></div>
-    </fieldset>
-    <fieldset id="bloque-extras" hidden>
-      <legend>Extras</legend>
-      <div class="opciones" id="extras"></div>
-    </fieldset>
-    <div class="estimado" id="estimado" aria-live="polite"></div>
-    <div>
-      <label for="detalle">Contanos más <span class="opcional">(menú, restricciones, horario…)</span></label>
-      <textarea id="detalle" name="detalle"></textarea>
-    </div>
-    <p class="error" id="error" role="alert"></p>
-    <button class="btn" type="submit">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3Z"/></svg>
-      Enviar consulta por WhatsApp
-    </button>
-    <button class="btn btn-sec" type="button" id="copiar">Copiar resumen</button>
-  </form>
+  <div class="cotizador">
+    <form id="form" novalidate>
+      <fieldset>
+        <legend>¿Cuántos invitados?</legend>
+        <div class="campo">
+          <input id="personas" type="number" min="1" step="1" inputmode="numeric" aria-label="Cantidad de invitados">
+          <small id="minimo" hidden></small>
+        </div>
+      </fieldset>
+      <fieldset id="bloque-opciones" hidden>
+        <legend>¿Qué querés incluir?</legend>
+        <div class="opciones" id="opciones"></div>
+      </fieldset>
+      <fieldset id="bloque-extras" hidden>
+        <legend>Extras</legend>
+        <div class="opciones" id="extras"></div>
+      </fieldset>
+      <fieldset>
+        <legend>Sobre tu evento</legend>
+        <div class="campos">
+          <div class="campo">
+            <label for="fecha">Fecha</label>
+            <input id="fecha" type="date">
+          </div>
+          <div class="campo">
+            <label for="zona">Zona o barrio</label>
+            <input id="zona" type="text" placeholder="Ej: Palermo" autocomplete="address-level2">
+          </div>
+        </div>
+      </fieldset>
+    </form>
+    <aside class="comanda" id="comanda" aria-live="polite"></aside>
+  </div>
 </main>
 
 <footer>{{NOMBRE}}</footer>
@@ -136,23 +138,29 @@
 <script>
 (function () {
   const DATOS = JSON.parse(document.getElementById("datos").textContent);
-  const pesos = n => "$" + Math.round(n).toLocaleString("es-AR");
-  const esc = s => String(s || "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const formato = new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 });
+  const pesos = n => formato.format(Math.round(Number(n) || 0));
+  const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const $ = id => document.getElementById(id);
   const minimo = DATOS.minimo_personas || 1;
-  $("personas").min = 1;
-  $("personas").placeholder = minimo > 1 ? `Desde ${minimo}` : "";
+  const WA_SVG = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3Z"/></svg>';
 
-  // Cotizador: opciones y extras vienen de data/catering.csv (o del link "catering_csv").
-  // Las opciones se cobran por persona; los extras, fijos o por persona. Sin precio = «A consultar».
-  const precioTexto = o => !o.precio ? "A consultar" : `${pesos(o.precio)}${o.cobro === "persona" ? " <small>/ persona</small>" : ""}`;
+  $("personas").value = DATOS.personas_por_defecto || "";
+  if (minimo > 1) {
+    $("minimo").hidden = false;
+    $("minimo").textContent = `Desde ${minimo} invitados. Para menos, consultanos.`;
+  }
+
+  // Opciones y extras vienen de data/catering.csv (o del link "catering_csv").
+  // Las opciones se cobran por invitado; los extras, fijos o por invitado. Sin precio = «A consultar» y no suma.
+  const precioTexto = o => !o.precio ? "A consultar" : pesos(o.precio) + (o.cobro === "persona" ? " por invitado" : "");
   function pintar(tipo, lista, bloque, caja, marcarPrimera) {
     if (!lista.length) return;
     $(bloque).hidden = false;
     $(caja).innerHTML = lista.map((o, i) => `
       <label class="opcion">
         <input type="checkbox" name="${tipo}" value="${i}" ${marcarPrimera && i === 0 ? "checked" : ""}>
-        <span><strong>${esc(o.nombre)}</strong>${o.detalle ? `<small>${esc(o.detalle)}</small>` : ""}</span>
+        <span class="texto"><strong>${esc(o.nombre)}</strong>${o.detalle ? `<small>${esc(o.detalle)}</small>` : ""}</span>
         <span class="precio">${precioTexto(o)}</span>
       </label>`).join("");
   }
@@ -163,82 +171,76 @@
     [...document.querySelectorAll(`input[name=${tipo}]:checked`)].map(c => lista[+c.value]);
 
   function cotizar() {
-    const personas = parseInt($("personas").value, 10) || 0;
-    const lineas = [
-      ...marcadas("opcion", DATOS.opciones),
-      ...marcadas("extra", DATOS.extras),
-    ].map(o => {
+    const personas = Math.max(0, Math.floor(Number($("personas").value) || 0));
+    const opciones = marcadas("opcion", DATOS.opciones);
+    const extras = marcadas("extra", DATOS.extras);
+    const lineas = [...opciones, ...extras].map(o => {
       const porPersona = o.cobro === "persona";
       return {
         nombre: o.nombre,
-        detalle: o.precio && porPersona && personas ? `${personas} × ${pesos(o.precio)}` : "",
+        detalle: porPersona && o.precio ? `${personas} × ${pesos(o.precio)}` : "",
         monto: o.precio ? (porPersona ? o.precio * personas : o.precio) : null,
       };
     });
     const total = lineas.reduce((suma, l) => suma + (l.monto || 0), 0);
-    return { personas, lineas, total, porPersona: personas ? total / personas : 0 };
+    return { personas, opciones, extras, lineas, total, porPersona: personas ? total / personas : 0 };
   }
+
+  // Mensaje de WhatsApp, igual al del borrador del cliente: una línea por dato, sin líneas vacías.
+  function mensaje(q) {
+    const fecha = $("fecha").value ? $("fecha").value.split("-").reverse().join("/") : "";
+    const zona = $("zona").value.trim();
+    return [
+      DATOS.mensaje,
+      `Invitados: ${q.personas}`,
+      q.opciones.length && `Incluye: ${q.opciones.map(o => o.nombre).join(", ")}`,
+      q.extras.length && `Extras: ${q.extras.map(o => o.nombre).join(", ")}`,
+      fecha && `Fecha: ${fecha}`,
+      zona && `Zona: ${zona}`,
+      q.total && `Estimado de la web: ${pesos(q.total)}`,
+    ].filter(Boolean).join("\n");
+  }
+  const linkWhatsapp = texto => `https://wa.me/${DATOS.whatsapp}?text=${encodeURIComponent(texto)}`;
+
   function actualizar() {
     const q = cotizar();
-    const caja = $("estimado");
-    const visible = q.lineas.length > 0 && q.personas > 0;
-    caja.classList.toggle("visible", visible);
-    if (!visible) return;
-    caja.innerHTML = "<strong>Tu estimado</strong>" +
-      q.lineas.map(l => `<div class="linea"><span>${esc(l.nombre)}${l.detalle ? `<small>${esc(l.detalle)}</small>` : ""}</span><span>${l.monto == null ? "A consultar" : pesos(l.monto)}</span></div>`).join("") +
-      `<div class="total"><span>Total estimado</span><strong>${pesos(q.total)}</strong></div>` +
-      (q.total ? `<small>${pesos(q.porPersona)} por persona</small>` : "") +
-      (q.personas < minimo ? `<p class="aviso">Para menos de ${minimo} personas, consultanos.</p>` : "") +
-      (DATOS.nota ? `<small>${esc(DATOS.nota)}</small>` : "");
+    const lineas = q.lineas.length
+      ? q.lineas.map(l => `<div class="linea"><span class="nombre"><strong>${esc(l.nombre)}</strong>${l.detalle ? `<small>${esc(l.detalle)}</small>` : ""}</span><span class="monto">${l.monto == null ? "A consultar" : pesos(l.monto)}</span></div>`).join("")
+      : `<p class="vacio">Elegí al menos una opción para ver el estimado.</p>`;
+    $("comanda").innerHTML = "<h2>Tu comanda</h2>" + lineas +
+      `<div class="total"><span>Total estimado</span><span class="monto">${pesos(q.total)}</span></div>` +
+      (q.lineas.length && q.personas ? `<p class="por-persona">${pesos(q.porPersona)} por invitado</p>` : "") +
+      (q.personas && q.personas < minimo ? `<p class="aviso">Para menos de ${minimo} invitados, consultanos.</p>` : "") +
+      (DATOS.nota ? `<p class="nota">${esc(DATOS.nota)}</p>` : "") +
+      `<div class="acciones">
+        <a class="btn" href="${esc(linkWhatsapp(mensaje(q)))}" target="_blank" rel="noopener">${WA_SVG} Pedir presupuesto por WhatsApp</a>
+        <button class="btn btn-sec" type="button" id="copiar">Copiar resumen</button>
+      </div>`;
   }
   $("form").addEventListener("input", actualizar);
+  $("form").addEventListener("submit", e => e.preventDefault());
 
-  // Arma el mensaje de WhatsApp. Devuelve null (y muestra el error) si falta algún dato.
-  function armarMensaje() {
-    const nombre = $("nombre").value.trim();
-    const q = cotizar();
-    const error = $("error");
-    let falta = "";
-    if (!nombre) falta = "Decinos tu nombre.";
-    else if (!(q.personas >= 1)) falta = "Indicá para cuántas personas es.";
-    error.textContent = falta;
-    error.classList.toggle("visible", !!falta);
-    if (falta) return null;
-
-    const opciones = marcadas("opcion", DATOS.opciones).map(o => o.nombre);
-    const extras = marcadas("extra", DATOS.extras).map(o => o.nombre);
-    const fecha = $("fecha").value ? $("fecha").value.split("-").reverse().join("/") : "";
-    const lineas = [
-      `• Nombre: ${nombre}`,
-      `• Tipo: ${$("tipo").value}`,
-      fecha && `• Fecha: ${fecha}`,
-      `• Personas: ${q.personas}`,
-      opciones.length && `• Incluye: ${opciones.join(", ")}`,
-      extras.length && `• Extras: ${extras.join(", ")}`,
-      $("zona").value.trim() && `• Zona: ${$("zona").value.trim()}`,
-      $("detalle").value.trim() && `• Detalle: ${$("detalle").value.trim()}`,
-      q.total && `\nPresupuesto estimado: ${pesos(q.total)} (a confirmar)`,
-    ].filter(Boolean);
-    return `${DATOS.mensaje}\n\n${lineas.join("\n")}`;
-  }
-
-  $("form").addEventListener("submit", e => {
-    e.preventDefault();
-    const texto = armarMensaje();
-    if (texto) window.open(`https://wa.me/${DATOS.whatsapp}?text=${encodeURIComponent(texto)}`, "_blank", "noopener");
-  });
-
-  $("copiar").addEventListener("click", async () => {
-    const texto = armarMensaje();
-    if (!texto) return;
-    const boton = $("copiar");
-    try {
-      await navigator.clipboard.writeText(texto);
-      boton.textContent = "¡Copiado!";
-    } catch (_) {
-      boton.textContent = "No se pudo copiar";
-    }
-    setTimeout(() => { boton.textContent = "Copiar resumen"; }, 2000);
+  // Copiar resumen: si el navegador no deja usar el portapapeles, muestra el texto seleccionado para copiarlo a mano.
+  $("comanda").addEventListener("click", e => {
+    const boton = e.target.closest("#copiar");
+    if (!boton) return;
+    const texto = mensaje(cotizar());
+    const listo = () => { boton.textContent = "¡Copiado!"; setTimeout(() => { boton.textContent = "Copiar resumen"; }, 1500); };
+    const aMano = () => {
+      const acciones = boton.closest(".acciones");
+      let caja = acciones.querySelector(".copia");
+      if (!caja) {
+        caja = document.createElement("textarea");
+        caja.className = "copia";
+        caja.readOnly = true;
+        caja.setAttribute("aria-label", "Resumen para copiar");
+        acciones.appendChild(caja);
+      }
+      caja.value = texto;
+      caja.focus();
+      caja.select();
+    };
+    try { navigator.clipboard.writeText(texto).then(listo, aMano); } catch (_) { aMano(); }
   });
   actualizar();
 })();

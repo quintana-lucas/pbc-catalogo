@@ -51,10 +51,10 @@
     "texto": "Elegí la cantidad de invitados y lo que querés incluir. Te mostramos un estimado y, si te sirve, lo confirmamos por WhatsApp.",
     "banner": "¿Catering, un evento o un pedido especial?",
     "boton": "Cotizar catering",
-    "tipos": ["Catering para evento", "Viandas para empresa", "Pedido especial", "Otro"],
     "minimo_personas": 10,
+    "personas_por_defecto": 20,
     "nota": "Es un valor de referencia. El presupuesto final depende del menú, la fecha y la zona de entrega, y lo confirmamos por WhatsApp.",
     "catering_csv": "",
-    "mensaje": "¡Hola! Quiero consultar por un pedido especial:"
+    "mensaje": "Hola! Quiero cotizar un catering con Planta Baja Cocina."
   }
 }
