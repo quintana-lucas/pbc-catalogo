@@ -169,13 +169,7 @@
 </style>
 </head>
 <body>
-<header>
-  <div class="envoltura">
-    {{SELLOS}}
-    <h1 class="marca"><img class="logo" src="{{LOGO}}" alt="{{NOMBRE}}" width="{{LOGO_ANCHO}}" height="{{LOGO_ALTO}}"></h1>
-    <nav class="redes" aria-label="Redes">{{REDES}}</nav>
-  </div>
-</header>
+{{ENCABEZADO}}
 
 <div class="barra">
   <div class="envoltura">
@@ -369,8 +363,9 @@
   // ¿Quiénes somos? en modal (si está configurado como página, el botón es un link y no hay modal)
   const modal = document.getElementById("quienes");
   if (modal) {
-    document.querySelector("[data-abrir-quienes]").onclick = () =>
-      modal.showModal ? modal.showModal() : modal.setAttribute("open", "");  // Safari < 15.4 no tiene showModal
+    const abrirQuienes = () => modal.showModal ? modal.showModal() : modal.setAttribute("open", "");  // Safari < 15.4 no tiene showModal
+    if (location.hash === "#quienes") abrirQuienes();  // viene del botón del encabezado de otra página
+    document.querySelector("[data-abrir-quienes]").onclick = abrirQuienes;
     modal.querySelector(".cerrar").onclick = () => modal.close ? modal.close() : modal.removeAttribute("open");
     // Tocar el fondo oscuro también lo cierra (Escape lo cierra solo)
     modal.addEventListener("click", e => { if (e.target === modal) modal.close(); });
