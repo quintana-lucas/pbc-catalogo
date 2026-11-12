@@ -1,0 +1,345 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-12T21:19:10+00:00",
+  "title": "Design System: Planta Baja Cocina",
+  "extensions": {
+    "colorMeta": {
+      "burgundy": {
+        "role": "primary",
+        "displayName": "Cellar Burgundy",
+        "canonical": "#7a1f22",
+        "tonalRamp": [
+          "#3d0f11",
+          "#6b1b1e",
+          "#9a272b",
+          "#c83338",
+          "#d65f63",
+          "#e28e90",
+          "#ebbfc1",
+          "#f6eeef"
+        ]
+      },
+      "burgundy-deep": {
+        "role": "primary",
+        "displayName": "Burgundy Deep",
+        "canonical": "#5e1619",
+        "tonalRamp": [
+          "#3e0f10",
+          "#6d1a1d",
+          "#9c252a",
+          "#cc3036",
+          "#d95d62",
+          "#e48c90",
+          "#ecbec0",
+          "#f6eeef"
+        ]
+      },
+      "olive": {
+        "role": "secondary",
+        "displayName": "Olive Grove",
+        "canonical": "#4b5a2c",
+        "tonalRamp": [
+          "#2b3319",
+          "#4b5b2c",
+          "#6c823f",
+          "#8da953",
+          "#a7bd78",
+          "#c0d0a0",
+          "#dae2c8",
+          "#f3f4f0"
+        ]
+      },
+      "olive-deep": {
+        "role": "secondary",
+        "displayName": "Olive Grove Deep",
+        "canonical": "#3a4722",
+        "tonalRamp": [
+          "#2a3419",
+          "#4a5b2c",
+          "#6b833f",
+          "#8baa51",
+          "#a5be78",
+          "#bfd19f",
+          "#d9e2c8",
+          "#f3f4f0"
+        ]
+      },
+      "marigold": {
+        "role": "tertiary",
+        "displayName": "Marigold Gold",
+        "canonical": "#d9a23a",
+        "tonalRamp": [
+          "#402e0c",
+          "#715116",
+          "#a2751f",
+          "#d39829",
+          "#dfb057",
+          "#e8c788",
+          "#eeddbc",
+          "#f7f4ee"
+        ]
+      },
+      "cream": {
+        "role": "neutral",
+        "displayName": "Cream Paper",
+        "canonical": "#f6efe2",
+        "tonalRamp": [
+          "#3a2c12",
+          "#674e20",
+          "#93702e",
+          "#c0923c",
+          "#d0ab66",
+          "#ddc393",
+          "#e9dbc2",
+          "#f6f3ef"
+        ]
+      },
+      "plate-white": {
+        "role": "neutral",
+        "displayName": "Plate White",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#262626",
+          "#434343",
+          "#616161",
+          "#7e7e7e",
+          "#9b9b9b",
+          "#b8b8b8",
+          "#d5d5d5",
+          "#f2f2f2"
+        ]
+      },
+      "cocoa-ink": {
+        "role": "neutral",
+        "displayName": "Cocoa Ink",
+        "canonical": "#2b211c",
+        "tonalRamp": [
+          "#2e241e",
+          "#523f35",
+          "#755a4c",
+          "#987563",
+          "#b09486",
+          "#c7b3a9",
+          "#ddd3cd",
+          "#f4f2f1"
+        ]
+      },
+      "soft-cocoa": {
+        "role": "neutral",
+        "displayName": "Soft Cocoa",
+        "canonical": "#6b5d52",
+        "tonalRamp": [
+          "#2b2621",
+          "#4c423a",
+          "#6d5f54",
+          "#8e7c6d",
+          "#a8998e",
+          "#c1b7af",
+          "#dad5d0",
+          "#f3f2f1"
+        ]
+      },
+      "oat-line": {
+        "role": "neutral",
+        "displayName": "Oat Line",
+        "canonical": "#e6dccb",
+        "tonalRamp": [
+          "#342a19",
+          "#5b4a2c",
+          "#82693f",
+          "#aa8952",
+          "#bea478",
+          "#d1be9f",
+          "#e2d8c8",
+          "#f4f3f0"
+        ]
+      },
+      "terracotta-alert": {
+        "role": "neutral",
+        "displayName": "Terracotta Alert",
+        "canonical": "#a8431c",
+        "tonalRamp": [
+          "#421a0b",
+          "#742e13",
+          "#a5421c",
+          "#d75624",
+          "#e27b53",
+          "#eba185",
+          "#efc9bb",
+          "#f7f0ee"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Catering page title and the comanda total."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Category headings and the dialog title."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Product names and form legends."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Descriptions, intro text, form labels."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Uppercase status labels such as Sin stock."
+      }
+    },
+    "shadows": [
+      {
+        "name": "card-rest",
+        "value": "0 1px 2px rgba(0,0,0,.06), 0 6px 20px rgba(0,0,0,.07)",
+        "purpose": "Product cards at rest."
+      },
+      {
+        "name": "order-bar",
+        "value": "0 10px 30px rgba(0,0,0,.18)",
+        "purpose": "Floating order bar."
+      },
+      {
+        "name": "dialog",
+        "value": "0 10px 40px rgba(0,0,0,.3)",
+        "purpose": "Modal dialog over a 50% black backdrop."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "phone",
+        "value": "480px"
+      },
+      {
+        "name": "header-stack",
+        "value": "640px"
+      },
+      {
+        "name": "catering-stack",
+        "value": "760px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Add Button",
+      "kind": "button",
+      "refersTo": "button-add",
+      "description": "Puts a product in the order.",
+      "html": "<button class=\"ds-btn-add\">Agregar</button>",
+      "css": ".ds-btn-add{border:0;border-radius:999px;padding:9px 16px;font:inherit;font-weight:800;cursor:pointer;background:var(--principal,#7a1f22);color:var(--sobre-principal,#fff)}.ds-btn-add:hover{background:var(--principal-osc,#5e1619)}.ds-btn-add:active{transform:translateY(1px)}"
+    },
+    {
+      "name": "Order Button",
+      "kind": "button",
+      "refersTo": "button-order",
+      "description": "Sends the order or quote on WhatsApp, or navigates to Catering.",
+      "html": "<a class=\"ds-btn-order\" href=\"#\">Enviar pedido</a>",
+      "css": ".ds-btn-order{display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;border:0;border-radius:999px;padding:13px 22px;font:inherit;font-weight:800;cursor:pointer;background:var(--secundario,#4b5a2c);color:var(--sobre-secundario,#fff)}.ds-btn-order:hover{background:var(--secundario-osc,#3a4722)}"
+    },
+    {
+      "name": "Category Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Filters the catalog by category; selected state is olive.",
+      "html": "<button class=\"ds-chip\" aria-pressed=\"false\">Tartas</button> <button class=\"ds-chip\" aria-pressed=\"true\">Postres</button>",
+      "css": ".ds-chip{border:1px solid var(--linea,#e6dccb);background:var(--papel,#fff);color:var(--tinta,#2b211c);padding:8px 16px;border-radius:999px;font:inherit;font-weight:600;cursor:pointer;white-space:nowrap}.ds-chip[aria-pressed=true]{background:var(--secundario,#4b5a2c);color:var(--sobre-secundario,#fff);border-color:var(--secundario,#4b5a2c)}"
+    },
+    {
+      "name": "Product Card",
+      "kind": "card",
+      "refersTo": "product-card",
+      "description": "Photo (or emoji), name, presentation, description and price with an add button.",
+      "html": "<article class=\"ds-card\"><div class=\"ds-foto\">🥧</div><div class=\"ds-cuerpo\"><h3>Tarta de espinaca</h3><span class=\"ds-pres\">Porción individual</span><p class=\"ds-desc\">Masa casera y relleno cremoso.</p><div class=\"ds-pie\"><span class=\"ds-precio\">$4.500</span><button class=\"ds-add\">Agregar</button></div></div></article>",
+      "css": ".ds-card{width:240px;background:var(--papel,#fff);border-radius:16px;box-shadow:0 1px 2px rgba(0,0,0,.06),0 6px 20px rgba(0,0,0,.07);overflow:hidden;display:flex;flex-direction:column;color:var(--tinta,#2b211c);font-family:var(--fuente-texto,Figtree),system-ui,sans-serif}.ds-foto{aspect-ratio:4/3;display:grid;place-items:center;font-size:4rem;background:color-mix(in srgb,var(--secundario,#4b5a2c) 10%,var(--papel,#fff))}.ds-cuerpo{padding:14px 16px 16px;display:flex;flex-direction:column;gap:4px}.ds-cuerpo h3{margin:0;font-size:1.1rem}.ds-pres{color:var(--suave,#6b5d52);font-size:.9rem;font-weight:600}.ds-desc{color:var(--suave,#6b5d52);font-size:.92rem;margin:2px 0 10px}.ds-pie{display:flex;align-items:center;justify-content:space-between;gap:8px}.ds-precio{font-weight:800;font-size:1.2rem}.ds-add{border:0;border-radius:999px;padding:9px 16px;font:inherit;font-weight:800;background:var(--principal,#7a1f22);color:var(--sobre-principal,#fff);cursor:pointer}.ds-add:hover{background:var(--principal-osc,#5e1619)}"
+    },
+    {
+      "name": "Catering Option",
+      "kind": "card",
+      "refersTo": "option-card",
+      "description": "Selectable option or extra in the quote form; checked state gets a burgundy border.",
+      "html": "<label class=\"ds-opcion\"><input type=\"checkbox\" checked><span class=\"ds-texto\"><strong>Empanadas surtidas</strong><small>Carne, pollo y verdura</small></span><span class=\"ds-precio\">$2.800 p/p</span></label>",
+      "css": ".ds-opcion{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;cursor:pointer;background:var(--papel,#fff);border:1.5px solid var(--linea,#e6dccb);border-radius:14px;width:320px;color:var(--tinta,#2b211c)}.ds-opcion:has(input:checked){border-color:var(--principal,#7a1f22);box-shadow:0 0 0 1px var(--principal,#7a1f22)}.ds-opcion input{width:20px;height:20px;margin:3px 0 0;flex:none;accent-color:var(--principal,#7a1f22)}.ds-texto{display:flex;flex-direction:column;flex:1}.ds-texto small{color:var(--suave,#6b5d52);font-size:.9rem}.ds-precio{font-weight:800;white-space:nowrap;font-size:.92rem;font-variant-numeric:tabular-nums}"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Form field in the catering quote.",
+      "html": "<input class=\"ds-input\" type=\"text\" placeholder=\"Ej: Palermo\">",
+      "css": ".ds-input{width:240px;font:inherit;color:var(--tinta,#2b211c);background:var(--papel,#fff);border:1.5px solid var(--linea,#e6dccb);border-radius:10px;padding:11px 13px}"
+    },
+    {
+      "name": "Header Icon Button",
+      "kind": "nav",
+      "refersTo": null,
+      "description": "Round olive button for WhatsApp, Instagram and module links in the header.",
+      "html": "<a class=\"ds-icono\" href=\"#\" aria-label=\"WhatsApp\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Z\"/></svg></a>",
+      "css": ".ds-icono{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:var(--sobre-secundario,#fff);background:var(--secundario,#4b5a2c);text-decoration:none}.ds-icono:hover{background:var(--secundario-osc,#3a4722)}"
+    },
+    {
+      "name": "Comanda",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Live summary of a catering quote: dashed lines, tabular amounts, large total.",
+      "html": "<aside class=\"ds-comanda\"><h2>Tu comanda</h2><div class=\"ds-linea\"><span>Empanadas surtidas × 20</span><span class=\"ds-monto\">$56.000</span></div><div class=\"ds-total\"><span>Total estimado</span><span class=\"ds-monto\">$56.000</span></div></aside>",
+      "css": ".ds-comanda{width:320px;background:var(--papel,#fff);padding:26px 24px 40px;border:1.5px solid var(--linea,#e6dccb);border-bottom:0;color:var(--tinta,#2b211c);font-family:var(--fuente-texto,Figtree),system-ui,sans-serif}.ds-comanda h2{font-family:var(--fuente-titulos,'Bricolage Grotesque'),Georgia,serif;font-size:1.6rem;margin:0 0 10px}.ds-linea{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1.5px dashed var(--linea,#e6dccb)}.ds-monto{font-weight:800;white-space:nowrap;font-variant-numeric:tabular-nums}.ds-total{display:flex;justify-content:space-between;align-items:baseline;padding-top:16px}.ds-total .ds-monto{font-family:var(--fuente-titulos,'Bricolage Grotesque'),Georgia,serif;font-size:2rem;line-height:1}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Family Kitchen Table",
+    "overview": "The site should feel like a table set by someone who cooks for you: warm cream paper, white plates (cards), burgundy and olive from the logo, and a thin marigold line under the header. Everything is rounded and soft. Nothing looks corporate, glossy or cold. It is warm and homemade, and it stays quick to use on a phone.\n\nDensity is moderate: a product grid with generous 16px gutters, one clear action per card, and a floating order bar. Expression comes from the palette, the rounded forms and the friendly Bricolage Grotesque titles, not from decoration. The client's colors and fonts live in `config.json`; this document records the PBC values currently configured.",
+    "keyCharacteristics": [
+      "Cream page, white cards, cocoa-brown ink (never pure black on pure white).",
+      "Burgundy for \"add to cart\", olive for \"send the order\" and navigation chips.",
+      "Pills and 16px-rounded cards; soft, low shadows.",
+      "Bricolage Grotesque for titles, Figtree for everything else.",
+      "Emoji stand in when a product has no photo."
+    ],
+    "rules": [
+      {
+        "name": "The Two-Verb Rule",
+        "body": "Burgundy means \"put this in my order\"; olive means \"send it / go there\". A button of the wrong color confuses the flow.",
+        "section": "colors"
+      },
+      {
+        "name": "The Gold Whisper Rule",
+        "body": "Marigold appears only as a thin line, never as a surface. Its rarity is the point.",
+        "section": "colors"
+      },
+      {
+        "name": "The Ink Titles Rule",
+        "body": "Section titles and headings use Cocoa Ink; color is reserved for actions.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tabular Money Rule",
+        "body": "Amounts in the cotizador use tabular numerals so columns of pesos align.",
+        "section": "typography"
+      },
+      {
+        "name": "The Float-Means-Action Rule",
+        "body": "Only things that follow the visitor (the order bar, the sticky category bar) or interrupt them (the dialog) get strong depth. Content stays calm.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** use Cellar Burgundy to add an item and Olive Grove to send or navigate.",
+      "**Do** keep cream as the page background and white for surfaces that hold content.",
+      "**Do** keep every tappable control at least 34px, and prefer 40px for header icons.",
+      "**Do** read colors and fonts from the `config.json` variables (`--principal`, `--secundario`, `--acento`, `--fondo`, `--tinta`...), never hard-coded hex.",
+      "**Do** keep working when a product has no photo, no price or is out of stock."
+    ],
+    "donts": [
+      "**Don't** replace the established identity (logo, burgundy / olive / gold on cream, «Hecho con amor»); this is a confirmed commitment.",
+      "**Don't** use marigold as a fill or for text.",
+      "**Don't** color titles; they stay Cocoa Ink.",
+      "**Don't** crop product photos or add decorative imagery that competes with them.",
+      "**Don't** add pure black text or cold gray surfaces."
+    ]
+  }
+}
