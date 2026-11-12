@@ -45,7 +45,7 @@
   }
   h2.cat {
     font-family: var(--fuente-titulos), Georgia, serif; font-size: 1.6rem;
-    margin: 32px 0 14px; display: flex; align-items: center; gap: 10px;
+    margin: 32px 0 14px; display: flex; align-items: center; gap: 10px; color: var(--secundario);
   }
   .grilla { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; }
   .tarjeta {
@@ -56,13 +56,13 @@
   .btn-info, .globo-info { display: none; }
   .foto {
     aspect-ratio: 4 / 3; display: grid; place-items: center; position: relative; overflow: hidden; flex-shrink: 0;
-    font-size: 4rem; background: color-mix(in srgb, var(--fondo) 70%, var(--linea));
+    font-size: 4rem; background: color-mix(in srgb, var(--secundario) 10%, var(--papel));  /* fondo verde muy suave detrás del emoji */
   }
   /* Las fotos son de paquetes enteros: se muestran completas sobre blanco, sin recortar. */
   .foto:has(img) { background: #fff; }
   /* El emoji va siempre debajo de la foto y se muestra solo si la imagen no carga (link caído, archivo borrado) */
   .foto:has(img) .sin-foto { display: none; }
-  .foto.rota { background: color-mix(in srgb, var(--fondo) 70%, var(--linea)); }
+  .foto.rota { background: color-mix(in srgb, var(--secundario) 10%, var(--papel)); }
   .foto.rota img { display: none; }
   .foto.rota .sin-foto { display: inline; }
   /* Posición absoluta: Safari de iOS viejos calculaba mal el 100% de alto dentro de la grilla y la foto se salía */
@@ -142,10 +142,10 @@
     .btn-info {
       display: grid; place-items: center; position: absolute; top: 6px; right: 6px; z-index: 3;
       width: 36px; height: 36px; border: 0; background: none; padding: 0; cursor: pointer;
-      color: var(--principal);  /* el borde del ícono */
+      color: var(--secundario);  /* el borde del ícono */
     }
     .btn-info circle { fill: var(--papel); }  /* relleno blanco para que se lea sobre la foto */
-    .btn-info[aria-expanded="true"] circle { fill: var(--principal); }
+    .btn-info[aria-expanded="true"] circle { fill: var(--secundario); }
     .btn-info[aria-expanded="true"] path { stroke: var(--papel); }
     .globo-info {
       position: absolute; top: 46px; left: 8px; right: 8px; z-index: 2;
