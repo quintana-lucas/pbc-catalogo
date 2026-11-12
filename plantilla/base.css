@@ -19,7 +19,7 @@
   .envoltura { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
 
   /* Encabezado: logo centrado sobre blanco (el logo está pensado para fondo claro) */
-  header { background: var(--papel); border-bottom: 3px solid var(--secundario); padding: var(--header-padding); }
+  header { background: var(--papel); border-bottom: 3px solid var(--acento); padding: var(--header-padding); }
   header .envoltura { position: relative; display: flex; justify-content: center; align-items: center; }
   .marca { margin: 0; line-height: 0; }
   .logo { max-height: var(--logo-max-height); width: auto; }

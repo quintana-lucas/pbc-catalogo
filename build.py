@@ -58,6 +58,7 @@ COLORES = {
     "secundario_oscuro": ("--secundario-osc", "#6f8f28"),
     "sobre_principal": ("--sobre-principal", "#ffffff"),
     "sobre_secundario": ("--sobre-secundario", "#1f2a1e"),
+    "acento": ("--acento", None),  # sin valor en config.json, toma el de "secundario"
     "fondo": ("--fondo", "#f3f6ee"),
     "tarjetas": ("--papel", "#ffffff"),
     "texto": ("--tinta", "#1f2a1e"),
@@ -241,7 +242,8 @@ def estilos_marca(config):
     """Variables CSS con los colores y las fuentes de config.json."""
     colores = config.get("colores", {})
     fuentes = config.get("fuentes", {})
-    lineas = [f"    {var}: {colores.get(clave, defecto)};" for clave, (var, defecto) in COLORES.items()]
+    secundario = colores.get("secundario", COLORES["secundario"][1])
+    lineas = [f"    {var}: {colores.get(clave, defecto or secundario)};" for clave, (var, defecto) in COLORES.items()]
     lineas.append(f'    --fuente-titulos: "{fuentes.get("titulos", "Fraunces")}";')
     lineas.append(f'    --fuente-texto: "{fuentes.get("texto", "Nunito Sans")}";')
     return "  :root {\n" + "\n".join(lineas) + "\n  }\n"

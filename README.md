@@ -42,7 +42,7 @@ Para probar en la compu antes de subir: `python3 build.py` y abrir
 | `planilla_csv` | Link CSV de la planilla publicada. Vacío = usa `data/productos.csv`. |
 | `dominio`, `indexar` | Dominio propio y si Google lo puede indexar. Mientras se prueba: `indexar: false`. |
 | `logo` | Archivo y tamaño original (ancho y alto en píxeles, para que no salte al cargar). |
-| `colores` | `principal` (botones), `principal_oscuro` (botón al pasar el mouse), `secundario` (detalles), `fondo`, `tarjetas`, `texto`, `texto_suave`, `bordes`, `alerta` («Sin stock»). |
+| `colores` | `principal` (botones), `principal_oscuro` (botón al pasar el mouse), `secundario` (categoría elegida), `sobre_secundario` (texto sobre el secundario), `acento` (línea del encabezado y del aviso; si falta, usa el secundario), `fondo`, `tarjetas`, `texto`, `texto_suave`, `bordes`, `alerta` («Sin stock»). |
 | `fuentes` | Dos fuentes de [Google Fonts](https://fonts.google.com): `titulos` y `texto`. |
 | `sellos` | Insignias junto al logo («Sin TACC», «Caseras»…). Cada una con `emoji` o `imagen`, y `detalle` opcional. `[]` = ninguna. |
 | `mensaje_pedido`, `aviso`, `pie` | Primera línea del mensaje de WhatsApp, cartel de instrucciones y texto del pie. |

@@ -30,7 +30,7 @@
     padding: 8px 16px; border-radius: 999px; font: inherit; font-weight: 600;
     cursor: pointer; white-space: nowrap;
   }
-  .chip[aria-pressed="true"] { background: var(--tinta); color: #fff; border-color: var(--tinta); }
+  .chip[aria-pressed="true"] { background: var(--secundario); color: var(--sobre-secundario); border-color: var(--secundario); }
   .buscar {
     flex: 1 1 200px; max-width: 280px;
     border: 1px solid var(--linea); border-radius: 999px; padding: 9px 16px;
@@ -40,7 +40,7 @@
   /* Catálogo */
   main.envoltura { padding-top: 24px; padding-bottom: 56px; }
   .aviso {
-    background: var(--papel); border-left: 4px solid var(--secundario);
+    background: var(--papel); border-left: 4px solid var(--acento);
     padding: 12px 16px; border-radius: 10px; margin-bottom: 24px; color: var(--suave);
   }
   h2.cat {
@@ -106,16 +106,17 @@
   .pedido {
     position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 10;
     max-width: 560px; margin: 0 auto;
-    background: var(--tinta); color: var(--sobre-principal); border-radius: 18px;
-    box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    background: var(--papel); color: var(--tinta); border: 1px solid var(--linea); border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.18);
     padding: 12px 12px 12px 18px; display: none; align-items: center; gap: 12px;
   }
   .pedido.visible { display: flex; }
   .pedido .resumen { flex: 1; font-size: .95rem; }
   .pedido .resumen strong { display: block; font-size: 1.1rem; }
-  .btn-wa { background: var(--secundario); color: var(--sobre-secundario); display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
-  .btn-wa:hover { background: var(--secundario-osc); }
-  .btn-vaciar { background: transparent; color: var(--sobre-principal); opacity: .7; padding: 9px 10px; }
+  /* Enviar pedido es la acción principal: mismo color que «Agregar» y que el botón del cotizador */
+  .btn-wa { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
+  .btn-vaciar { background: transparent; color: var(--suave); padding: 9px 10px; }
+  .btn-vaciar:hover { background: var(--fondo); }
 
   /* Modal de ¿Quiénes somos? (solo si QUIENES_SOMOS=modal) */
   .modal {

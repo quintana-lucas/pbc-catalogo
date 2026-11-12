@@ -16,15 +16,15 @@
   /* Módulo opcional de pedidos especiales / catering (solo si "pedidos_especiales.activo" en config.json).
      Cotizador: se eligen invitados, opciones y extras; al lado, una «comanda» con el estimado. */
   main.envoltura { max-width: 1040px; padding-top: 24px; padding-bottom: 56px; }
-  .volver { color: var(--principal); font-weight: 800; text-decoration: none; }
+  .volver { color: var(--tinta); font-weight: 800; text-decoration: none; }
   .volver:hover { text-decoration: underline; }
-  main h1 { font-family: var(--fuente-titulos), Georgia, serif; font-size: 2rem; margin: 20px 0 8px; color: var(--principal); }
+  main h1 { font-family: var(--fuente-titulos), Georgia, serif; font-size: 2rem; margin: 20px 0 8px; color: var(--tinta); }
   .intro { color: var(--suave); margin: 0 0 28px; max-width: 62ch; }
   .cotizador { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 40px; align-items: start; }
   fieldset { border: 0; margin: 0 0 28px; padding: 0; min-width: 0; }
   legend {
     font-family: var(--fuente-titulos), Georgia, serif; font-weight: 800; font-size: 1.25rem;
-    color: var(--principal); padding: 0; margin-bottom: 12px;
+    color: var(--tinta); padding: 0; margin-bottom: 12px;
   }
   .opciones { display: grid; gap: 10px; }
   .opcion {
@@ -52,14 +52,14 @@
     -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 18px 100%;
     mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 18px 100%;
   }
-  .comanda h2 { font-family: var(--fuente-titulos), Georgia, serif; font-size: 1.6rem; color: var(--principal); margin: 0 0 10px; }
+  .comanda h2 { font-family: var(--fuente-titulos), Georgia, serif; font-size: 1.6rem; color: var(--tinta); margin: 0 0 10px; }
   .linea { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 9px 0; border-bottom: 1.5px dashed var(--linea); }
   .linea .nombre { display: flex; flex-direction: column; min-width: 0; flex: 1; }
   .linea small { color: var(--suave); }
   .monto { font-weight: 800; white-space: nowrap; font-variant-numeric: tabular-nums; }
   .total { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding-top: 16px; }
   .total span:first-child { font-weight: 700; }
-  .total .monto { font-family: var(--fuente-titulos), Georgia, serif; font-size: 2rem; line-height: 1; color: var(--principal); }
+  .total .monto { font-family: var(--fuente-titulos), Georgia, serif; font-size: 2rem; line-height: 1; color: var(--tinta); }
   .por-persona, .nota, .vacio, .aviso { margin: 8px 0 0; font-size: .92rem; color: var(--suave); }
   .aviso { color: var(--alerta); font-weight: 700; }
   .acciones { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
@@ -68,7 +68,7 @@
     background: var(--principal); color: var(--sobre-principal); display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   }
   .btn:hover { background: var(--principal-osc); }
-  .btn-sec { background: transparent; color: var(--principal); box-shadow: inset 0 0 0 2px var(--principal); }
+  .btn-sec { background: var(--papel); color: var(--tinta); box-shadow: inset 0 0 0 1.5px var(--linea); }
   .btn-sec:hover { background: var(--fondo); }
   .copia {
     width: 100%; min-height: 120px; font: inherit; color: var(--tinta); background: var(--fondo);
