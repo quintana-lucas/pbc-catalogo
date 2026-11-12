@@ -57,24 +57,27 @@ Para probar en la compu antes de subir: `python3 build.py` y abrir
 
 Con `"activo": true` en `pedidos_especiales` se suma la página
 `pedidos-especiales.html`, un botón en el encabezado y un aviso arriba del
-catálogo. Es un formulario (nombre, tipo de pedido, fecha, personas, zona,
-detalle) que arma el mensaje y lo abre en WhatsApp: no necesita servidor ni
-base de datos.
+catálogo. Es un cotizador de catering (invitados, opciones, extras, fecha y
+zona) que arma el mensaje y lo abre en WhatsApp: no necesita servidor ni base
+de datos.
 
-- `tipos`: opciones del desplegable «¿Qué necesitás?».
+- `titulo`, `texto`, `banner`, `boton`: textos de la página y del aviso.
 - `minimo_personas`: por debajo de ese número la página avisa «consultanos»,
   pero deja enviar igual.
+- `personas_por_defecto`: invitados que aparecen cargados al entrar (0 = vacío).
+- `mensaje`: primera línea del mensaje de WhatsApp.
 - `nota`: texto chico debajo del estimado (por ejemplo, que es orientativo).
 - `catering_csv`: link CSV de una hoja de Google publicada con las opciones y
   extras del cotizador. Vacío = usa `data/catering.csv`. Columnas: `Tipo`
   (`Opción` o `Extra`), `Nombre`, `Descripción`, `Precio` y `Cobro` (`por
   persona` o `fijo`; las opciones siempre van por persona).
 
-La página muestra las opciones y los extras para tildar (se pueden combinar) y
-arma un **presupuesto estimado** con el desglose, el total y el precio por
-persona. El mensaje de WhatsApp lo incluye, y hay un botón para copiar el
-resumen. Un precio vacío = «a consultar» y no suma. Sin filas = solo formulario
-de contacto.
+La página muestra las opciones (la primera viene tildada) y los extras para
+tildar (se pueden combinar) y, al lado, una **comanda** con el desglose, el
+total estimado y el precio por invitado, que se actualiza al instante. El
+mensaje de WhatsApp lleva invitados, opciones, extras, fecha, zona y el
+estimado, y hay un botón para copiar el resumen. Un precio vacío = «a
+consultar» y no suma.
 
 Con `"activo": false` desaparece todo rastro del módulo.
 

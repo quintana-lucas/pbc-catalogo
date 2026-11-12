@@ -383,14 +383,16 @@ def banner_pedidos(config):
 
 
 def pagina_pedidos(config, comunes, quienes):
-    """Módulo opcional: formulario de pedidos especiales / catering con cotizador. Arma un mensaje de WhatsApp."""
+    """Módulo opcional: cotizador de catering (invitados, opciones, extras, fecha y zona) que arma el
+    estimado y el mensaje de WhatsApp, como el borrador original del cliente."""
     modulo = config["pedidos_especiales"]
     titulo = f"{modulo.get('titulo', 'Pedidos especiales')} | {config['nombre']}"
     datos = {
         "whatsapp": config["whatsapp"],
-        "mensaje": modulo.get("mensaje", "¡Hola! Quiero consultar por un pedido especial:"),
+        "mensaje": modulo.get("mensaje", f"Hola! Quiero cotizar un catering con {config['nombre']}."),
         **leer_catering(config),
         "minimo_personas": modulo.get("minimo_personas", 1),
+        "personas_por_defecto": modulo.get("personas_por_defecto", 0),
         "nota": modulo.get("nota", ""),
     }
     return rellenar(PAGINA_PEDIDOS, {
@@ -400,9 +402,6 @@ def pagina_pedidos(config, comunes, quienes):
         "{{REDES}}": redes(config, quienes if quienes == "pagina" else None),
         "{{PEDIDOS_TITULO}}": html.escape(modulo.get("titulo", "Pedidos especiales")),
         "{{PEDIDOS_TEXTO}}": html.escape(modulo.get("texto", "")),
-        "{{PEDIDOS_TIPOS}}": "".join(
-            f"<option>{html.escape(tipo)}</option>" for tipo in modulo.get("tipos", ["Pedido especial", "Catering", "Otro"])
-        ),
         "{{DATOS}}": json.dumps(datos, ensure_ascii=False).replace("</", "<\\/"),
     })
 
