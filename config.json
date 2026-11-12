@@ -8,7 +8,7 @@
   "dominio": "",
   "indexar": false,
 
-  "logo": { "archivo": "assets/logo.svg", "ancho": 800, "alto": 300 },
+  "logo": { "archivo": "assets/logo.png", "ancho": 640, "alto": 640 },
   "colores": {
     "principal": "#24462f",
     "principal_oscuro": "#1a3523",

@@ -484,7 +484,7 @@ def main():
     comunes = {
         "{{ESTILOS_BASE}}": estilos_marca(config) + (RAIZ / "plantilla" / "base.css").read_text(encoding="utf-8"),
         "{{FUENTES}}": link_fuentes(config),
-        "{{LOGO}}": html.escape(logo.get("archivo", "assets/logo.svg")),
+        "{{LOGO}}": html.escape(logo.get("archivo", "assets/logo.png")),
         "{{LOGO_ANCHO}}": str(logo.get("ancho", 800)),
         "{{LOGO_ALTO}}": str(logo.get("alto", 300)),
         "{{NOMBRE}}": html.escape(config["nombre"]),
