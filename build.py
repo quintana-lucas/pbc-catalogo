@@ -404,6 +404,12 @@ def banner_pedidos(config):
     )
 
 
+def texto_pie(config, ahora):
+    """Texto del pie de las páginas de precios (catálogo y cotizador): una sola fuente para que no se desfasen."""
+    pie = f" · {html.escape(config['pie'])}" if config.get("pie") else ""
+    return f"Catálogo actualizado el {ahora.strftime('%d/%m/%Y %H:%M')}{pie}"
+
+
 def pagina_pedidos(config, comunes, quienes):
     """Módulo opcional: cotizador de catering (invitados, opciones, extras, fecha y zona) que arma el
     estimado y el mensaje de WhatsApp, como el borrador original del cliente."""
@@ -503,6 +509,7 @@ def main():
         "{{NOMBRE}}": html.escape(config["nombre"]),
         "{{DESCRIPCION}}": html.escape(config.get("descripcion") or config.get("eslogan", "")),
         "{{SELLOS}}": sellos(config),
+        "{{PIE}}": texto_pie(config, ahora),
         "{{ROBOTS}}": "" if config.get("indexar") else '<meta name="robots" content="noindex, nofollow">',
     }
     def marca(etiqueta, alt):
@@ -523,8 +530,6 @@ def main():
         "{{REDES}}": redes(config, quienes, pedidos),
         "{{MODAL_QUIENES}}": modal_quienes(config) if quienes == "modal" else "",
         "{{BANNER_PEDIDOS}}": banner_pedidos(config) if pedidos else "",
-        "{{ACTUALIZADO}}": ahora.strftime("%d/%m/%Y %H:%M"),
-        "{{PIE}}": f" · {html.escape(config['pie'])}" if config.get("pie") else "",
         "{{DATOS}}": json.dumps(
             {
                 "productos": productos,
