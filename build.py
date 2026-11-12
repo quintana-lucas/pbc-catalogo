@@ -297,10 +297,23 @@ def modal_quienes(config):
     )
 
 
+def modulo_nav(actual, pedidos):
+    """Barra del encabezado por módulo: título del módulo actual y un botón de texto al otro.
+    actual: "catalogo" o "pedidos". Sin catering activo no hay otro módulo y no hay botón."""
+    if actual == "catalogo":
+        titulo, otro = "Catálogo", (PAGINA_PEDIDOS, NOMBRE_CATERING)
+    else:
+        titulo, otro = NOMBRE_CATERING, (PAGINA_CATALOGO, "Catálogo")
+    boton = f'<a class="modulo-otro" href="{otro[0]}">{html.escape(otro[1])}</a>' if (pedidos or actual == "pedidos") else ""
+    return (
+        f'<div class="envoltura modulo-barra"><p class="modulo-titulo">{html.escape(titulo)}</p>{boton}</div>'
+    )
+
+
 def redes(config, quienes=None, pedidos=False, pagina_actual=None):
-    """Íconos del encabezado: ¿Quiénes somos? (modal o link a su página), catering (si el módulo
-    está activo), Instagram (si está en config) y WhatsApp. Es el mismo conjunto en todas las páginas;
-    pagina_actual ("quienes" o "pedidos") marca el botón de la página en la que se está."""
+    """Íconos del encabezado: ¿Quiénes somos? (modal o link a su página), Instagram (si está en config)
+    y WhatsApp. Es el mismo conjunto en todas las páginas; el acceso al otro módulo es el botón
+    de texto de modulo_nav, no un ícono. pagina_actual ("quienes") marca el botón de la página en la que se está."""
     botones = ""
     if quienes == "modal" and pagina_actual:
         # Fuera del catálogo no hay modal: el botón lleva al catálogo, que lo abre solo.
@@ -313,10 +326,6 @@ def redes(config, quienes=None, pedidos=False, pagina_actual=None):
     elif quienes == "pagina":
         actual = ' aria-current="page"' if pagina_actual == "quienes" else ""
         botones = f'<a href="{PAGINA_QUIENES}"{actual} aria-label="¿Quiénes somos?" title="¿Quiénes somos?">{QUIENES_SVG}</a>'
-    if pedidos:
-        titulo = html.escape(NOMBRE_CATERING)
-        actual = ' aria-current="page"' if pagina_actual == "pedidos" else ""
-        botones += f'<a href="{PAGINA_PEDIDOS}"{actual} aria-label="{titulo}" title="{titulo}">{PEDIDOS_SVG}</a>'
     enlaces = []
     if config.get("instagram"):
         enlaces.append((config["instagram"], "Instagram", IG_SVG))
@@ -460,6 +469,7 @@ def pagina_pedidos(config, comunes, quienes):
         "{{TITULO}}": html.escape(titulo),
         "{{METADATOS}}": metadatos(config, titulo, PAGINA_PEDIDOS),
         "{{REDES}}": redes(config, quienes, True, "pedidos"),
+        "{{MODULO}}": modulo_nav("pedidos", True),
         "{{PEDIDOS_TITULO}}": html.escape(NOMBRE_CATERING),
         "{{PEDIDOS_TEXTO}}": html.escape(modulo.get("texto", "")),
         "{{DATOS}}": json.dumps(datos, ensure_ascii=False).replace("</", "<\\/"),
@@ -541,6 +551,7 @@ def main():
         "{{NOMBRE}}": html.escape(config["nombre"]),
         "{{DESCRIPCION}}": html.escape(config.get("descripcion") or config.get("eslogan", "")),
         "{{SELLOS}}": sellos(config),
+        "{{MODULO}}": "",
         "{{PIE}}": texto_pie(config, ahora),
         "{{ROBOTS}}": "" if config.get("indexar") else '<meta name="robots" content="noindex, nofollow">',
     }
@@ -569,6 +580,7 @@ def main():
         "{{ESLOGAN}}": html.escape(config.get("eslogan", "")),
         "{{AVISO}}": html.escape(config.get("aviso", "")),
         "{{REDES}}": redes(config, quienes, pedidos),
+        "{{MODULO}}": modulo_nav("catalogo", pedidos),
         "{{MODAL_QUIENES}}": modal_quienes(config) if quienes == "modal" else "",
         "{{BANNER_PEDIDOS}}": banner_pedidos(config) if pedidos else "",
         "{{DATOS}}": json.dumps(
