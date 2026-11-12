@@ -4,7 +4,7 @@
   :root {
     --sombra: 0 1px 2px rgba(0,0,0,.06), 0 6px 20px rgba(0,0,0,.07);
     --radio: 16px;
-    --logo-max-height: 64px;
+    --logo-max-height: 96px;
     --header-padding: 12px 0;
   }
   * { box-sizing: border-box; }
@@ -47,7 +47,7 @@
 
   /* Con poco ancho, sellos y botones no entran al costado del logo: van en una fila debajo */
   @media (max-width: 640px) {
-    header { padding: 10px 0; --logo-max-height: 48px; }
+    header { padding: 10px 0; --logo-max-height: 96px; }
     header .envoltura {
       display: grid; grid-template-columns: 1fr auto; grid-template-areas: "logo logo" "sellos redes";
       row-gap: 12px; align-items: center;
