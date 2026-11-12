@@ -207,7 +207,7 @@
       (q.personas && q.personas < minimo ? `<p class="aviso">Para menos de ${minimo} invitados, consultanos.</p>` : "") +
       (DATOS.nota ? `<p class="nota">${esc(DATOS.nota)}</p>` : "") +
       `<div class="acciones">
-        <a class="btn" href="${esc(linkWhatsapp(mensaje(q)))}" target="_blank" rel="noopener">${WA_SVG} Pedir presupuesto por WhatsApp</a>
+        <a class="btn-orden" href="${esc(linkWhatsapp(mensaje(q)))}" target="_blank" rel="noopener">${WA_SVG} Pedir presupuesto por WhatsApp</a>
         <button class="btn btn-sec" type="button" id="copiar">Copiar resumen</button>
       </div>`;
   }

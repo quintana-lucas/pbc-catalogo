@@ -40,6 +40,13 @@
   }
   .redes a:hover, .redes button:hover { background: var(--secundario-osc); }
 
+  /* Botón de envío/presupuesto usa color secundario (verde oliva) */
+  .btn-orden {
+    border: 0; border-radius: 999px; padding: 13px 22px; font: inherit; font-weight: 800; cursor: pointer; text-decoration: none;
+    background: var(--secundario); color: var(--sobre-secundario); display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .btn-orden:hover { background: var(--secundario-osc); }
+
   /* Texto de ¿Quiénes somos? (en el modal y en su página) */
   .quienes-texto p { margin: 0 0 12px; }
   .quienes-texto p:last-child { margin-bottom: 0; }

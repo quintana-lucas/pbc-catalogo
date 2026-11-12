@@ -57,7 +57,7 @@ COLORES = {
     "secundario": ("--secundario", "#89b335"),
     "secundario_oscuro": ("--secundario-osc", "#6f8f28"),
     "sobre_principal": ("--sobre-principal", "#ffffff"),
-    "sobre_secundario": ("--sobre-secundario", "#1f2a1e"),
+    "sobre_secundario": ("--sobre-secundario", "#ffffff"),
     "acento": ("--acento", None),  # sin valor en config.json, toma el de "secundario"
     "fondo": ("--fondo", "#f3f6ee"),
     "tarjetas": ("--papel", "#ffffff"),
@@ -402,7 +402,7 @@ def banner_pedidos(config):
     texto = modulo.get("banner", "¿Catering, un evento o un pedido especial?")
     return (
         f'<div class="banner-pedidos"><p>{html.escape(texto)}</p>'
-        f'<a class="btn" href="{PAGINA_PEDIDOS}">{html.escape(modulo.get("boton", "Pedir presupuesto"))}</a></div>'
+        f'<a class="btn-orden" href="{PAGINA_PEDIDOS}">{html.escape(modulo.get("boton", "Pedir presupuesto"))}</a></div>'
     )
 
 
