@@ -68,7 +68,7 @@ Dirección elegida: hoja rayada, no ticket térmico.
 ### 5. Pista del carrito (segunda etapa)
 
 Cuando el carrito del catálogo es muy grande, un aviso chico ("¿Es para un evento? Pedí presupuesto en Catering")
-lleva al cotizador. Reemplaza al banner actual (`.banner-pedidos`). Umbral por definir al implementar.
+lleva al cotizador. Reemplaza al banner actual (`.banner-pedidos`). Umbral: 30 unidades en el carrito (configurable con `pedidos_especiales.umbral_pista`); la pista va dentro del pedido flotante.
 
 ## Preguntas abiertas
 

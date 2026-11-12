@@ -61,7 +61,7 @@ catálogo. Es un cotizador de catering (invitados, opciones, extras, fecha y
 zona) que arma el mensaje y lo abre en WhatsApp: no necesita servidor ni base
 de datos.
 
-- `titulo`, `texto`, `banner`, `boton`: textos de la página y del aviso.
+- `titulo`, `texto`, `boton`: textos de la página y del botón. `umbral_pista` (opcional, 30 por defecto): unidades en el carrito del catálogo desde las que aparece "¿Es para un evento?" con un link a Catering.
 - `minimo_personas`: por debajo de ese número la página avisa «consultanos»,
   pero deja enviar igual.
 - `personas_por_defecto`: invitados que aparecen cargados al entrar (0 = vacío).
