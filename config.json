@@ -46,7 +46,7 @@
     "Todas las semanas armamos un menú nuevo, y además hacemos tartas, postres, panadería, sopitas y platos premium envasados al vacío para que tengas siempre algo rico en la heladera.",
     "Todo está hecho con amor. Elegí lo que quieras y mandanos tu pedido por WhatsApp."
   ],
-  "quienes_somos_modo": "modal",
+  "quienes_somos_modo": "oculto",
 
   "pedidos_especiales": {
     "activo": true,

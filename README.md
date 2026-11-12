@@ -48,7 +48,7 @@ Para probar en la compu antes de subir: `python3 build.py` y abrir
 | `mensaje_pedido`, `aviso`, `pie` | Primera línea del mensaje de WhatsApp, cartel de instrucciones y texto del pie. |
 | `categorias_primero` | Categorías que van siempre arriba (por ejemplo `Ofertas`). |
 | `emojis_categoria`, `emojis_producto`, `emoji_por_defecto` | Emojis que se ven si un producto no tiene foto. Para productos gana la primera palabra que aparezca en el nombre. |
-| `quienes_somos`, `quienes_somos_modo` | Párrafos de «¿Quiénes somos?» y si se abren en un cartel (`modal`) o en otra página (`pagina`). `[]` = no aparece. |
+| `quienes_somos`, `quienes_somos_modo` | Párrafos de «¿Quiénes somos?» y si se abren en un cartel (`modal`) o en otra página (`pagina`). `oculto` (o `[]`) = no aparece el botón, ni el cartel, ni la página (se conserva el texto). |
 | `pedidos_especiales` | Módulo opcional, ver abajo. |
 
 ## Módulos opcionales
