@@ -275,20 +275,26 @@ def modal_quienes(config):
     )
 
 
-def redes(config, quienes=None, pedidos=False):
+def redes(config, quienes=None, pedidos=False, pagina_actual=None):
     """Íconos del encabezado: ¿Quiénes somos? (modal o link a su página), pedidos especiales (si el módulo
-    está activo), Instagram (si está en config) y WhatsApp."""
+    está activo), Instagram (si está en config) y WhatsApp. Es el mismo conjunto en todas las páginas;
+    pagina_actual ("quienes" o "pedidos") marca el botón de la página en la que se está."""
     botones = ""
-    if quienes == "modal":
+    if quienes == "modal" and pagina_actual:
+        # Fuera del catálogo no hay modal: el botón lleva al catálogo, que lo abre solo.
+        botones = f'<a href="./#quienes" aria-label="¿Quiénes somos?" title="¿Quiénes somos?">{QUIENES_SVG}</a>'
+    elif quienes == "modal":
         botones = (
             '<button type="button" data-abrir-quienes aria-haspopup="dialog" aria-label="¿Quiénes somos?" '
             f'title="¿Quiénes somos?">{QUIENES_SVG}</button>'
         )
     elif quienes == "pagina":
-        botones = f'<a href="{PAGINA_QUIENES}" aria-label="¿Quiénes somos?" title="¿Quiénes somos?">{QUIENES_SVG}</a>'
+        actual = ' aria-current="page"' if pagina_actual == "quienes" else ""
+        botones = f'<a href="{PAGINA_QUIENES}"{actual} aria-label="¿Quiénes somos?" title="¿Quiénes somos?">{QUIENES_SVG}</a>'
     if pedidos:
         titulo = html.escape(config["pedidos_especiales"].get("titulo", "Pedidos especiales"))
-        botones += f'<a href="{PAGINA_PEDIDOS}" aria-label="{titulo}" title="{titulo}">{PEDIDOS_SVG}</a>'
+        actual = ' aria-current="page"' if pagina_actual == "pedidos" else ""
+        botones += f'<a href="{PAGINA_PEDIDOS}"{actual} aria-label="{titulo}" title="{titulo}">{PEDIDOS_SVG}</a>'
     enlaces = []
     if config.get("instagram"):
         enlaces.append((config["instagram"], "Instagram", IG_SVG))
@@ -402,7 +408,7 @@ def pagina_pedidos(config, comunes, quienes):
         **comunes,
         "{{TITULO}}": html.escape(titulo),
         "{{METADATOS}}": metadatos(config, titulo, PAGINA_PEDIDOS),
-        "{{REDES}}": redes(config, quienes if quienes == "pagina" else None),
+        "{{REDES}}": redes(config, quienes, True, "pedidos"),
         "{{PEDIDOS_TITULO}}": html.escape(modulo.get("titulo", "Pedidos especiales")),
         "{{PEDIDOS_TEXTO}}": html.escape(modulo.get("texto", "")),
         "{{DATOS}}": json.dumps(datos, ensure_ascii=False).replace("</", "<\\/"),
@@ -412,6 +418,9 @@ def pagina_pedidos(config, comunes, quienes):
 def rellenar(plantilla, reemplazos):
     """Lee plantilla/<plantilla> y cambia cada {{MARCA}} por su valor, en el orden del diccionario."""
     texto = (RAIZ / "plantilla" / plantilla).read_text(encoding="utf-8")
+    # Encabezado compartido por todas las páginas.
+    encabezado = (RAIZ / "plantilla" / "encabezado.html").read_text(encoding="utf-8").rstrip("\n")
+    texto = texto.replace("{{ENCABEZADO}}", encabezado)
     for marca, valor in reemplazos.items():
         texto = texto.replace(marca, valor)
     return texto
@@ -483,8 +492,17 @@ def main():
         "{{SELLOS}}": sellos(config),
         "{{ROBOTS}}": "" if config.get("indexar") else '<meta name="robots" content="noindex, nofollow">',
     }
+    def marca(etiqueta, alt):
+        imagen = (
+            f'<img class="logo" src="{comunes["{{LOGO}}"]}" alt="{alt}" '
+            f'width="{comunes["{{LOGO_ANCHO}}"]}" height="{comunes["{{LOGO_ALTO}}"]}">'
+        )
+        return f'<h1 class="marca">{imagen}</h1>' if etiqueta == "h1" else f'<a class="marca" href="./">{imagen}</a>'
+    # En el catálogo el logo es el h1; en las demás páginas es el link de vuelta.
+    comunes["{{MARCA}}"] = marca("a", comunes["{{NOMBRE}}"] + " — volver al catálogo")
     paginas = {"index.html": rellenar("index.html", {
         **comunes,
+        "{{MARCA}}": marca("h1", comunes["{{NOMBRE}}"]),
         "{{TITULO}}": html.escape(titulo),
         "{{METADATOS}}": metadatos(config, titulo),
         "{{ESLOGAN}}": html.escape(config.get("eslogan", "")),
@@ -515,7 +533,7 @@ def main():
             **comunes,
             "{{TITULO}}": html.escape(titulo_quienes),
             "{{METADATOS}}": metadatos(config, titulo_quienes, PAGINA_QUIENES),
-            "{{REDES}}": redes(config, pedidos=pedidos),  # sin el botón de ¿Quiénes somos?: ya se está en esa página
+            "{{REDES}}": redes(config, quienes, pedidos, "quienes"),
             "{{QUIENES_TEXTO}}": texto_quienes(config),
         })
     if pedidos:
