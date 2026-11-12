@@ -57,7 +57,7 @@
     "minimo_personas": 10,
     "personas_por_defecto": 20,
     "nota": "Es un valor de referencia. El presupuesto final depende del menú, la fecha y la zona de entrega, y lo confirmamos por WhatsApp.",
-    "catering_csv": "",
+    "catering_csv": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ7bJ8-KkTxNCIlEr5mibbWLKr_9hH61OwqY90TfCPS9prpqObA5VHGTIE0czIUNZXKxd3bH1Bn5qVP/pub?gid=0&single=true&output=csv",
     "mensaje": "Hola! Quiero cotizar un catering con Planta Baja Cocina."
   }
 }
