@@ -105,17 +105,32 @@ def leer_csv(config):
 
 
 def leer_catering(config):
-    """Opciones y extras del cotizador. Salen del link "catering_csv" (Google Sheets publicada como CSV)
-    o, si está vacío, de data/catering.csv. Columnas: Tipo (Opción o Extra), Nombre, Descripción, Precio
-    y Cobro (por persona o fijo; las opciones siempre se cobran por persona)."""
+    """Opciones y extras del cotizador. Salen del link "catering_csv" (Google Sheets publicada como CSV).
+    Si el link está vacío, no responde o la hoja no trae opciones, se usa data/catering.csv como respaldo.
+    Columnas: Tipo (Opción o Extra), Nombre, Descripción (se acepta «Descipción»), Precio y Cobro
+    (por persona o fijo; las opciones siempre se cobran por persona)."""
     url = config.get("pedidos_especiales", {}).get("catering_csv", "").strip()
+    local = RAIZ / "data" / "catering.csv"
     if url:
         print(f"Descargando cotizador desde {url[:60]}...")
-        with urllib.request.urlopen(url, timeout=30) as r:
-            texto = r.read().decode("utf-8-sig")
+        try:
+            with urllib.request.urlopen(url, timeout=30) as r:
+                texto = r.read().decode("utf-8-sig")
+            datos = parsear_catering(texto)
+            if datos["opciones"]:
+                return datos
+            print("::warning::La hoja del cotizador no tiene opciones. Se usa data/catering.csv.")
+        except Exception as e:
+            print(f"::warning::No se pudo leer la hoja del cotizador ({e}). Se usa data/catering.csv.")
     else:
         print("Usando data/catering.csv")
-        texto = (RAIZ / "data" / "catering.csv").read_text(encoding="utf-8-sig")
+    datos = parsear_catering(local.read_text(encoding="utf-8-sig"))
+    if not datos["opciones"]:
+        print("::warning::El cotizador no tiene ninguna fila de tipo Opción.")
+    return datos
+
+
+def parsear_catering(texto):
     opciones, extras = [], []
     for fila in csv.DictReader(io.StringIO(texto)):
         campos = {normalizar(k): (v or "").strip() for k, v in fila.items() if k}
@@ -129,12 +144,10 @@ def leer_catering(config):
         persona = tipo == "opcion" or normalizar(campos.get("cobro", "")).endswith("persona")
         (opciones if tipo == "opcion" else extras).append({
             "nombre": nombre,
-            "detalle": campos.get("descripcion", ""),
+            "detalle": campos.get("descripcion") or campos.get("descipcion", ""),
             "precio": parsear_precio(campos.get("precio", "")) or 0,
             "cobro": "persona" if persona else "fijo",
         })
-    if not opciones:
-        print("::warning::El cotizador no tiene ninguna fila de tipo Opción.")
     return {"opciones": opciones, "extras": extras}
 
 

@@ -67,10 +67,17 @@ de datos.
 - `personas_por_defecto`: invitados que aparecen cargados al entrar (0 = vacío).
 - `mensaje`: primera línea del mensaje de WhatsApp.
 - `nota`: texto chico debajo del estimado (por ejemplo, que es orientativo).
-- `catering_csv`: link CSV de una hoja de Google publicada con las opciones y
-  extras del cotizador. Vacío = usa `data/catering.csv`. Columnas: `Tipo`
-  (`Opción` o `Extra`), `Nombre`, `Descripción`, `Precio` y `Cobro` (`por
-  persona` o `fijo`; las opciones siempre van por persona).
+- `catering_csv`: link CSV de una hoja de Google publicada (Archivo > Compartir
+  > Publicar en la web > CSV) con las opciones y extras del cotizador. Se lee
+  al armar la página, así que un cambio en la hoja se ve después de volver a
+  publicar. Si el link está vacío, no responde o la hoja no trae opciones, se
+  usa `data/catering.csv` (mismo formato) y el build avisa. Columnas, una fila
+  por opción o extra (los encabezados no distinguen mayúsculas ni tildes):
+  - `Tipo`: `Opción` o `Extra`.
+  - `Nombre`: lo que ve el cliente.
+  - `Descripción`: texto chico opcional (también se acepta el typo `Descipción`).
+  - `Precio`: entero en pesos; vacío = «a consultar» y no suma.
+  - `Cobro`: `por persona` o `fijo` (las opciones siempre van por persona).
 
 La página muestra las opciones (la primera viene tildada) y los extras para
 tildar (se pueden combinar) y, al lado, una **comanda** con el desglose, el
