@@ -249,11 +249,16 @@ def estilos_marca(config):
     return "  :root {\n" + "\n".join(lineas) + "\n  }\n"
 
 
-def link_fuentes(config):
-    """Link a Google Fonts con las dos fuentes de config.json."""
+FUENTE_MANUSCRITA = "Caveat"  # la comanda del cotizador, escrita a mano
+
+
+def link_fuentes(config, manuscrita=False):
+    """Link a Google Fonts con las dos fuentes de config.json (y la manuscrita de la comanda si se pide)."""
     fuentes = config.get("fuentes", {})
     familias = dict.fromkeys([fuentes.get("titulos", "Fraunces"), fuentes.get("texto", "Nunito Sans")])
     query = "&".join(f"family={f.replace(' ', '+')}:wght@400;600;800" for f in familias)
+    if manuscrita:
+        query += f"&family={FUENTE_MANUSCRITA}:wght@500;700"
     return (
         '<link rel="preconnect" href="https://fonts.googleapis.com">\n'
         f'<link href="https://fonts.googleapis.com/css2?{query}&display=swap" rel="stylesheet">'
@@ -427,6 +432,7 @@ def pagina_pedidos(config, comunes, quienes):
     }
     return rellenar(PAGINA_PEDIDOS, {
         **comunes,
+        "{{FUENTES}}": link_fuentes(config, manuscrita=True),
         "{{TITULO}}": html.escape(titulo),
         "{{METADATOS}}": metadatos(config, titulo, PAGINA_PEDIDOS),
         "{{REDES}}": redes(config, quienes, True, "pedidos"),
