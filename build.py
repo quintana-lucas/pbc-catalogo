@@ -430,12 +430,14 @@ def puertas(pedidos):
     return resultado
 
 
-def banner_pedidos(config):
-    modulo = config["pedidos_especiales"]
-    texto = modulo.get("banner", "¿Catering, un evento o un pedido especial?")
+UMBRAL_PISTA_CARRITO = 30  # unidades en el carrito a partir de las cuales se muestra la pista de Catering
+
+
+def pista_carrito():
+    """Aviso chico dentro del pedido flotante: aparece (por JS) solo cuando el carrito es muy grande."""
     return (
-        f'<div class="banner-pedidos"><p>{html.escape(texto)}</p>'
-        f'<a class="btn-orden" href="{PAGINA_PEDIDOS}">{html.escape(modulo.get("boton", "Pedir presupuesto"))}</a></div>'
+        f'<a class="pista-evento" id="pista-evento" href="{PAGINA_PEDIDOS}" hidden>'
+        f'¿Es para un evento? Pedí presupuesto en {NOMBRE_CATERING}</a>'
     )
 
 
@@ -576,13 +578,14 @@ def main():
         "{{REDES}}": redes(config, quienes, pedidos),
         "{{MODULO}}": modulo_nav("catalogo", pedidos),
         "{{MODAL_QUIENES}}": modal_quienes(config) if quienes == "modal" else "",
-        "{{BANNER_PEDIDOS}}": banner_pedidos(config) if pedidos else "",
+        "{{PISTA_CARRITO}}": pista_carrito() if pedidos else "",
         "{{DATOS}}": json.dumps(
             {
                 "productos": productos,
                 "categorias": categorias,
                 "whatsapp": config["whatsapp"],
                 "mensaje": config.get("mensaje_pedido", "Hola, quiero hacer este pedido:"),
+                "umbral_pista": config.get("pedidos_especiales", {}).get("umbral_pista", UMBRAL_PISTA_CARRITO),
                 "emojis_producto": config.get("emojis_producto", {}),
                 "emojis_categoria": config.get("emojis_categoria", {}),
                 "emoji_por_defecto": config.get("emoji_por_defecto", "🛒"),
