@@ -48,6 +48,8 @@ MINIMO_RESPECTO_ANTERIOR = 0.5
 MODOS_QUIENES = ("modal", "pagina", "oculto")
 PAGINA_QUIENES = "quienes-somos.html"
 PAGINA_PEDIDOS = "pedidos-especiales.html"
+PAGINA_CATALOGO = "catalogo.html"
+NOMBRE_CATERING = "Catering"  # lo que ve el usuario; la clave de config.json sigue siendo "pedidos_especiales"
 # Claves de config.json sin las que no se puede armar la página.
 CONFIG_OBLIGATORIAS = ("nombre", "whatsapp")
 # Colores de config.json -> variables CSS que usan las plantillas.
@@ -216,7 +218,7 @@ QUIENES_SVG = (
     '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>'
     '<path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>'
 )
-# Ícono "message-square-text" de Lucide: pedidos especiales y catering.
+# Ícono "message-square-text" de Lucide: catering.
 PEDIDOS_SVG = (
     '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
     'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
@@ -291,13 +293,13 @@ def modal_quienes(config):
 
 
 def redes(config, quienes=None, pedidos=False, pagina_actual=None):
-    """Íconos del encabezado: ¿Quiénes somos? (modal o link a su página), pedidos especiales (si el módulo
+    """Íconos del encabezado: ¿Quiénes somos? (modal o link a su página), catering (si el módulo
     está activo), Instagram (si está en config) y WhatsApp. Es el mismo conjunto en todas las páginas;
     pagina_actual ("quienes" o "pedidos") marca el botón de la página en la que se está."""
     botones = ""
     if quienes == "modal" and pagina_actual:
         # Fuera del catálogo no hay modal: el botón lleva al catálogo, que lo abre solo.
-        botones = f'<a href="./#quienes" aria-label="¿Quiénes somos?" title="¿Quiénes somos?">{QUIENES_SVG}</a>'
+        botones = f'<a href="{PAGINA_CATALOGO}#quienes" aria-label="¿Quiénes somos?" title="¿Quiénes somos?">{QUIENES_SVG}</a>'
     elif quienes == "modal":
         botones = (
             '<button type="button" data-abrir-quienes aria-haspopup="dialog" aria-label="¿Quiénes somos?" '
@@ -307,7 +309,7 @@ def redes(config, quienes=None, pedidos=False, pagina_actual=None):
         actual = ' aria-current="page"' if pagina_actual == "quienes" else ""
         botones = f'<a href="{PAGINA_QUIENES}"{actual} aria-label="¿Quiénes somos?" title="¿Quiénes somos?">{QUIENES_SVG}</a>'
     if pedidos:
-        titulo = html.escape(config["pedidos_especiales"].get("titulo", "Pedidos especiales"))
+        titulo = html.escape(NOMBRE_CATERING)
         actual = ' aria-current="page"' if pagina_actual == "pedidos" else ""
         botones += f'<a href="{PAGINA_PEDIDOS}"{actual} aria-label="{titulo}" title="{titulo}">{PEDIDOS_SVG}</a>'
     enlaces = []
@@ -324,7 +326,7 @@ def redes(config, quienes=None, pedidos=False, pagina_actual=None):
 def metadatos(config, titulo, ruta=""):
     """Canonical, Open Graph (vista previa al compartir el link) y datos estructurados para Google.
 
-    ruta: la página dentro del sitio ("" es el catálogo). Los datos del negocio van solo en el catálogo.
+    ruta: la página dentro del sitio ("" es la portada). Los datos del negocio van solo en la portada.
     """
     if not config.get("dominio"):
         return ""
@@ -397,6 +399,28 @@ def robots_y_sitemap(config, ahora, rutas):
     (SALIDA / "robots.txt").write_text(robots)
 
 
+CATALOGO_SVG = (
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" '
+    'stroke-linejoin="round" aria-hidden="true"><path d="M4 11a8 8 0 0 1 16 0"/><path d="M3 11h18"/>'
+    '<path d="M5 11l1 8h12l1-8"/><path d="M12 3v2"/></svg>'
+)
+CATERING_SVG = (
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" '
+    'stroke-linejoin="round" aria-hidden="true"><path d="M3 18h18"/><path d="M4 18a8 8 0 0 1 16 0"/>'
+    '<path d="M12 8V6"/><path d="M10 6h4"/></svg>'
+)
+
+
+def puertas(pedidos):
+    """Las dos puertas de la portada. Sin el módulo de catering queda solo el catálogo."""
+    def puerta(href, clase, svg, nombre, detalle):
+        return f'<a class="puerta {clase}" href="{href}">{svg}<strong>{nombre}</strong><span>{detalle}</span></a>'
+    resultado = puerta(PAGINA_CATALOGO, "catalogo", CATALOGO_SVG, "Catálogo", "viandas y productos")
+    if pedidos:
+        resultado += puerta(PAGINA_PEDIDOS, "catering", CATERING_SVG, NOMBRE_CATERING, "eventos y pedidos especiales")
+    return resultado
+
+
 def banner_pedidos(config):
     modulo = config["pedidos_especiales"]
     texto = modulo.get("banner", "¿Catering, un evento o un pedido especial?")
@@ -416,7 +440,7 @@ def pagina_pedidos(config, comunes, quienes):
     """Módulo opcional: cotizador de catering (invitados, opciones, extras, fecha y zona) que arma el
     estimado y el mensaje de WhatsApp, como el borrador original del cliente."""
     modulo = config["pedidos_especiales"]
-    titulo = f"{modulo.get('titulo', 'Pedidos especiales')} | {config['nombre']}"
+    titulo = f"{NOMBRE_CATERING} | {config['nombre']}"
     datos = {
         "whatsapp": config["whatsapp"],
         "mensaje": modulo.get("mensaje", f"Hola! Quiero cotizar un catering con {config['nombre']}."),
@@ -430,7 +454,7 @@ def pagina_pedidos(config, comunes, quienes):
         "{{TITULO}}": html.escape(titulo),
         "{{METADATOS}}": metadatos(config, titulo, PAGINA_PEDIDOS),
         "{{REDES}}": redes(config, quienes, True, "pedidos"),
-        "{{PEDIDOS_TITULO}}": html.escape(modulo.get("titulo", "Pedidos especiales")),
+        "{{PEDIDOS_TITULO}}": html.escape(NOMBRE_CATERING),
         "{{PEDIDOS_TEXTO}}": html.escape(modulo.get("texto", "")),
         "{{DATOS}}": json.dumps(datos, ensure_ascii=False).replace("</", "<\\/"),
     })
@@ -498,7 +522,7 @@ def main():
     quienes = modo_quienes(config)
     print(f"¿Quiénes somos?: {quienes or 'oculto o sin texto en config.json, no se muestra'}")
     pedidos = pedidos_activo(config)
-    print(f"Pedidos especiales: {'activo' if pedidos else 'apagado'}")
+    print(f"Catering: {'activo' if pedidos else 'apagado'}")
     logo = config.get("logo", {})
 
     # Lo que comparten el catálogo y la página de ¿Quiénes somos?
@@ -521,12 +545,21 @@ def main():
         )
         return f'<h1 class="marca">{imagen}</h1>' if etiqueta == "h1" else f'<a class="marca" href="./">{imagen}</a>'
     # En el catálogo el logo es el h1; en las demás páginas es el link de vuelta.
-    comunes["{{MARCA}}"] = marca("a", comunes["{{NOMBRE}}"] + " — volver al catálogo")
-    paginas = {"index.html": rellenar("index.html", {
+    comunes["{{MARCA}}"] = marca("a", comunes["{{NOMBRE}}"] + " — ir a la portada")
+    # La portada es "/": solo para elegir. El catálogo vive en catalogo.html.
+    portada = rellenar("portada.html", {
         **comunes,
         "{{MARCA}}": marca("h1", comunes["{{NOMBRE}}"]),
         "{{TITULO}}": html.escape(titulo),
         "{{METADATOS}}": metadatos(config, titulo),
+        "{{PUERTAS}}": puertas(pedidos),
+        "{{PAGINA_CATALOGO}}": PAGINA_CATALOGO,
+    })
+    paginas = {"index.html": portada, PAGINA_CATALOGO: rellenar("index.html", {
+        **comunes,
+        "{{MARCA}}": marca("h1", comunes["{{NOMBRE}}"]),
+        "{{TITULO}}": html.escape(titulo),
+        "{{METADATOS}}": metadatos(config, titulo, PAGINA_CATALOGO),
         "{{ESLOGAN}}": html.escape(config.get("eslogan", "")),
         "{{AVISO}}": html.escape(config.get("aviso", "")),
         "{{REDES}}": redes(config, quienes, pedidos),

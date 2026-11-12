@@ -30,7 +30,7 @@ usarlo con otros clientes.
    la página en el celular: agregar un producto y mandar un pedido de prueba.
 
 Para probar en la compu antes de subir: `python3 build.py` y abrir
-`_site/index.html` (no hace falta instalar nada).
+`_site/index.html` (la portada con las puertas Catálogo y Catering; el catálogo está en `_site/catalogo.html`). No hace falta instalar nada.
 
 ## Qué va en `config.json`
 
@@ -53,7 +53,7 @@ Para probar en la compu antes de subir: `python3 build.py` y abrir
 
 ## Módulos opcionales
 
-### Pedidos especiales, catering y cotizador (incluido)
+### Catering y cotizador (incluido; la clave de config.json sigue siendo `pedidos_especiales`)
 
 Con `"activo": true` en `pedidos_especiales` se suma la página
 `pedidos-especiales.html`, un botón en el encabezado y un aviso arriba del
