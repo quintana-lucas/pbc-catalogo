@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{{ROBOTS}}
+<title>{{TITULO}}</title>
+<meta name="description" content="{{DESCRIPCION}}">
+{{METADATOS}}
+<link rel="icon" href="assets/favicon.ico" sizes="48x48">
+<link rel="icon" href="assets/favicon-512.png" type="image/png" sizes="512x512">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+{{FUENTES}}
+<style>
+{{ESTILOS_BASE}}
+  /* Portada: solo sirve para elegir entre los dos módulos */
+  .portada { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px; padding: 32px 16px 40px; text-align: center; }
+  .portada .logo { max-height: 140px; margin: 0 auto; }
+  .portada .pregunta { margin: 0; font-family: var(--fuente-titulos), Georgia, serif; font-size: clamp(1.4rem, 4.5vw, 1.9rem); line-height: 1.15; }
+  /* Cada puerta es una arcada: el borde redondeado de arriba hace de "puerta" */
+  .puertas { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; width: 100%; max-width: 560px; }
+  .puerta {
+    display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 6px;
+    min-height: 250px; padding: 28px 20px 26px; text-decoration: none;
+    border-radius: 999px 999px var(--radio) var(--radio);
+    color: var(--sobre-principal); background: var(--principal);
+    box-shadow: var(--sombra); border-bottom: 6px solid var(--acento);
+    transition: transform .15s ease, background-color .15s ease;
+  }
+  .puerta.catering { background: var(--secundario); color: var(--sobre-secundario); }
+  .puerta:hover { background: var(--principal-osc); transform: translateY(-3px); }
+  .puerta.catering:hover { background: var(--secundario-osc); }
+  .puerta:focus-visible { outline: 3px solid var(--tinta); outline-offset: 3px; }
+  .puerta svg { margin-bottom: auto; width: 44px; height: 44px; }
+  .puerta strong { font-family: var(--fuente-titulos), Georgia, serif; font-size: 1.7rem; line-height: 1.1; }
+  .puerta span { font-size: .98rem; opacity: .92; max-width: 16ch; }
+  @media (prefers-reduced-motion: reduce) { .puerta { transition: none; } .puerta:hover { transform: none; } }
+  @media (max-width: 480px) { .puerta { min-height: 190px; } }
+</style>
+</head>
+<body>
+<main class="portada">
+  {{MARCA}}
+  <h2 class="pregunta">¿Qué necesitás?</h2>
+  <nav class="puertas" aria-label="Secciones">{{PUERTAS}}</nav>
+</main>
+<script>
+  // Los links viejos al catálogo apuntaban a "/" (a veces con #quienes u otros parámetros): los mandamos al catálogo.
+  if (location.hash || location.search) location.replace("{{PAGINA_CATALOGO}}" + location.search + location.hash);
+</script>
+</body>
+</html>

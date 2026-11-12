@@ -51,7 +51,7 @@
 
   "pedidos_especiales": {
     "activo": true,
-    "titulo": "Cotizá tu catering",
+    "titulo": "Catering",
     "texto": "Elegí la cantidad de invitados y lo que querés incluir. Te mostramos un estimado y, si te sirve, lo confirmamos por WhatsApp.",
     "banner": "¿Catering, un evento o un pedido especial?",
     "boton": "Cotizar catering",
