@@ -12,7 +12,7 @@ Fuente de productos (en orden de prioridad):
 Otras variables de entorno (las pone la GitHub Action):
   SOLO_SI_CAMBIA=true  no publica si los productos son iguales a los de la página actual.
   FORZAR=true          publica aunque haya muchos menos productos que antes.
-  QUIENES_SOMOS        pisa "quienes_somos_modo" de config.json: "modal" o "pagina".
+  QUIENES_SOMOS        pisa "quienes_somos_modo" de config.json: "modal", "pagina" u "oculto" (sin botón, cartel ni página).
 
 Solo usa la biblioteca estándar de Python: no hace falta instalar nada.
 """
@@ -45,7 +45,7 @@ OBLIGATORIAS = ("nombre", "precio")
 # Si quedan menos de esta fracción de los productos publicados, se frena (filas borradas por error).
 MINIMO_RESPECTO_ANTERIOR = 0.5
 # Formas de mostrar «¿Quiénes somos?»; la primera es la que se usa si la variable no está o está mal escrita.
-MODOS_QUIENES = ("modal", "pagina")
+MODOS_QUIENES = ("modal", "pagina", "oculto")
 PAGINA_QUIENES = "quienes-somos.html"
 PAGINA_PEDIDOS = "pedidos-especiales.html"
 # Claves de config.json sin las que no se puede armar la página.
@@ -263,7 +263,7 @@ def pedidos_activo(config):
 
 
 def modo_quienes(config):
-    """'modal', 'pagina', o None si config.json no tiene el texto (entonces no aparece el botón)."""
+    """'modal', 'pagina', o None si config.json no tiene el texto o el modo es 'oculto' (no aparece el botón)."""
     if not config.get("quienes_somos"):
         return None
     pedido = os.environ.get("QUIENES_SOMOS", "") or config.get("quienes_somos_modo", "")
@@ -271,7 +271,7 @@ def modo_quienes(config):
     if modo not in MODOS_QUIENES:
         print(f"::warning::QUIENES_SOMOS={pedido!r} no es válido (usá {' o '.join(MODOS_QUIENES)}). Se usa {MODOS_QUIENES[0]}.")
         modo = MODOS_QUIENES[0]
-    return modo
+    return None if modo == "oculto" else modo
 
 
 def texto_quienes(config):
@@ -488,7 +488,7 @@ def main():
     # Título de la pestaña y del resultado en Google: el nombre solo dice poco.
     titulo = config.get("titulo") or " | ".join(filter(None, [config["nombre"], config.get("eslogan")]))
     quienes = modo_quienes(config)
-    print(f"¿Quiénes somos?: {quienes or 'sin texto en config.json, no se muestra'}")
+    print(f"¿Quiénes somos?: {quienes or 'oculto o sin texto en config.json, no se muestra'}")
     pedidos = pedidos_activo(config)
     print(f"Pedidos especiales: {'activo' if pedidos else 'apagado'}")
     logo = config.get("logo", {})
