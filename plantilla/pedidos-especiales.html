@@ -68,6 +68,12 @@
     background: var(--principal); color: var(--sobre-principal); display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   }
   .btn:hover { background: var(--principal-osc); }
+  /* Botón de envío/presupuesto usa color secundario (verde oliva) */
+  .btn-orden {
+    border: 0; border-radius: 999px; padding: 13px 22px; font: inherit; font-weight: 800; cursor: pointer; text-decoration: none;
+    background: var(--secundario); color: var(--sobre-secundario); display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .btn-orden:hover { background: var(--secundario-osc); }
   .btn-sec { background: var(--papel); color: var(--tinta); box-shadow: inset 0 0 0 1.5px var(--linea); }
   .btn-sec:hover { background: var(--fondo); }
   .copia {
@@ -207,7 +213,7 @@
       (q.personas && q.personas < minimo ? `<p class="aviso">Para menos de ${minimo} invitados, consultanos.</p>` : "") +
       (DATOS.nota ? `<p class="nota">${esc(DATOS.nota)}</p>` : "") +
       `<div class="acciones">
-        <a class="btn" href="${esc(linkWhatsapp(mensaje(q)))}" target="_blank" rel="noopener">${WA_SVG} Pedir presupuesto por WhatsApp</a>
+        <a class="btn-orden" href="${esc(linkWhatsapp(mensaje(q)))}" target="_blank" rel="noopener">${WA_SVG} Pedir presupuesto por WhatsApp</a>
         <button class="btn btn-sec" type="button" id="copiar">Copiar resumen</button>
       </div>`;
   }
