@@ -51,24 +51,19 @@
     color: var(--sobre-secundario); background: var(--secundario);
   }
   .menu-boton:hover { background: var(--secundario-osc); }
-  /* Drawer de módulos: sale desde la izquierda, también en desktop */
-  .menu-drawer {
-    margin: 0; height: 100dvh; max-height: none; width: min(300px, 85vw); padding: 64px 16px 24px;
-    border: 0; background: var(--papel); color: var(--tinta); box-shadow: 0 10px 40px rgba(0,0,0,.3);
+  /* Dropdown de módulos: chico, anclado al botón de menú */
+  .menu-modulo { position: relative; }
+  .menu-lista {
+    position: absolute; top: calc(100% + 8px); left: 0; z-index: 20; min-width: 190px; padding: 6px;
+    background: var(--papel); border: 1px solid var(--linea); border-radius: 14px; box-shadow: 0 10px 30px rgba(0,0,0,.18);
   }
-  .menu-drawer::backdrop { background: rgba(0,0,0,.5); }
-  .menu-drawer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
-  .menu-drawer a {
-    display: block; padding: 12px 14px; border-radius: 12px; font-weight: 800; font-size: 1.1rem;
-    color: var(--tinta); text-decoration: none;
+  .menu-lista[hidden] { display: none; }
+  .menu-lista ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+  .menu-lista a {
+    display: block; padding: 10px 14px; border-radius: 10px; font-weight: 800; color: var(--tinta); text-decoration: none;
   }
-  .menu-drawer a:hover { background: var(--fondo); }
-  .menu-drawer a[aria-current] { background: var(--secundario); color: var(--sobre-secundario); }
-  .menu-cerrar {
-    position: absolute; top: 12px; right: 12px; width: 40px; height: 40px; border: 0; border-radius: 50%;
-    background: var(--fondo); color: var(--tinta); font-size: 1.5rem; line-height: 1; cursor: pointer;
-  }
-  .menu-cerrar:hover { background: var(--linea); }
+  .menu-lista a:hover { background: var(--fondo); }
+  .menu-lista a[aria-current] { background: var(--secundario); color: var(--sobre-secundario); }
 
   /* Botón de envío/presupuesto usa color secundario (verde oliva) */
   .btn-orden {
