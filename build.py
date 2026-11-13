@@ -317,19 +317,20 @@ MENU_SVG = (
     'stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>'
 )
 MENU_JS = (
-    "<script>(function(){var m=document.getElementById('menu-modulos'),b=document.querySelector('.menu-boton');"
+    "<script>(function(){var b=document.querySelector('.menu-boton'),m=document.getElementById('menu-modulos');"
     "if(!m||!b)return;"
-    "b.addEventListener('click',function(){m.showModal();b.setAttribute('aria-expanded','true');});"
-    "m.addEventListener('close',function(){b.setAttribute('aria-expanded','false');b.focus();});"
-    "m.addEventListener('click',function(e){if(e.target===m||e.target.closest('.menu-cerrar'))m.close();});"
+    "function abrir(si){m.hidden=!si;b.setAttribute('aria-expanded',si?'true':'false');}"
+    "b.addEventListener('click',function(){abrir(m.hidden);});"
+    "document.addEventListener('click',function(e){if(!m.hidden&&!m.contains(e.target)&&!b.contains(e.target))abrir(false);});"
+    "document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!m.hidden){abrir(false);b.focus();}});"
     "})();</script>"
 )
 
 
 def modulo_nav(actual, pedidos):
-    """Barra del encabezado por módulo: botón de menú y título del módulo actual. El menú es un drawer
-    (también en desktop) con los módulos. actual: "catalogo" o "pedidos". Sin catering activo no hay otro
-    módulo y no hay menú."""
+    """Zona izquierda del encabezado: botón de menú y título del módulo actual. El menú es un dropdown chico
+    anclado al botón (en mobile y en desktop) con los módulos. actual: "catalogo" o "pedidos". Sin catering
+    activo no hay otro módulo y no hay menú."""
     titulo = "Catálogo" if actual == "catalogo" else NOMBRE_CATERING
     barra = f'<p class="modulo-titulo">{html.escape(titulo)}</p>'
     if not (pedidos or actual == "pedidos"):
@@ -340,16 +341,14 @@ def modulo_nav(actual, pedidos):
         f'<li><a href="{href}"{actual_attr if clave == actual else ""}>{html.escape(nombre)}</a></li>'
         for href, nombre, clave in modulos
     )
-    boton = (
+    menu = (
+        '<div class="menu-modulo">'
         '<button class="menu-boton" type="button" aria-expanded="false" aria-controls="menu-modulos" '
         f'aria-label="Menú">{MENU_SVG}</button>'
+        f'<nav class="menu-lista" id="menu-modulos" aria-label="Secciones" hidden><ul>{enlaces}</ul></nav>'
+        "</div>"
     )
-    drawer = (
-        '<dialog class="menu-drawer" id="menu-modulos" aria-label="Menú">'
-        '<button class="menu-cerrar" type="button" aria-label="Cerrar menú">×</button>'
-        f'<nav aria-label="Secciones"><ul>{enlaces}</ul></nav></dialog>'
-    )
-    return f'<div class="modulo-barra">{boton}{barra}</div>{drawer}{MENU_JS}'
+    return f'<div class="modulo-barra">{menu}{barra}</div>{MENU_JS}'
 
 
 def redes(config, quienes=None, pedidos=False, pagina_actual=None):
