@@ -240,12 +240,27 @@ def sellos(config):
     return f'<ul class="sellos" aria-label="Características">{"".join(items)}</ul>' if items else ""
 
 
+def mezclar(color_a, color_b, parte_a):
+    """Mezcla dos colores #rrggbb: `parte_a` (0 a 1) de color_a y el resto de color_b."""
+    a, b = (tuple(int(c.lstrip("#")[i:i + 2], 16) for i in (0, 2, 4)) for c in (color_a, color_b))
+    return "#" + "".join(f"{round(x * parte_a + y * (1 - parte_a)):02x}" for x, y in zip(a, b))
+
+
 def estilos_marca(config):
     """Variables CSS con los colores y las fuentes de config.json."""
     colores = config.get("colores", {})
     fuentes = config.get("fuentes", {})
     secundario = colores.get("secundario", COLORES["secundario"][1])
     lineas = [f"    {var}: {colores.get(clave, defecto or secundario)};" for clave, (var, defecto) in COLORES.items()]
+    # Borde de campos y chips: "bordes" es muy suave para marcar un control (WCAG pide 3:1), así que sale de
+    # mezclar el texto con las tarjetas, salvo que config.json defina "bordes_controles".
+    texto = colores.get("texto", COLORES["texto"][1])
+    tarjetas = colores.get("tarjetas", COLORES["tarjetas"][1])
+    try:
+        borde_control = colores.get("bordes_controles") or mezclar(texto, tarjetas, .55)
+    except ValueError:
+        borde_control = "#767676"  # colores que no son #rrggbb: gris que cumple 3:1 sobre blanco
+    lineas.append(f"    --borde-control: {borde_control};")
     lineas.append(f'    --fuente-titulos: "{fuentes.get("titulos", "Fraunces")}";')
     lineas.append(f'    --fuente-texto: "{fuentes.get("texto", "Nunito Sans")}";')
     return "  :root {\n" + "\n".join(lineas) + "\n  }\n"

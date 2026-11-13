@@ -182,7 +182,7 @@ Pills (999px) for every button, chip and search field; round (50%) 40px icon but
 - **Header icons:** 40px round Olive Grove buttons with white glyphs.
 
 ### Chips
-- **Style:** white, 1px Oat Line border, Cocoa Ink text, 8px 16px, weight 600.
+- **Style:** white, 1px control-edge border, Cocoa Ink text, 8px 16px, weight 600.
 - **State:** selected is Olive Grove with white text and border; the row scrolls horizontally without a scrollbar.
 
 ### Cards / Containers
@@ -190,10 +190,10 @@ Pills (999px) for every button, chip and search field; round (50%) 40px icon but
 - **Background:** Plate White on Cream Paper.
 - **Shadow Strategy:** the resting two-layer shadow.
 - **Internal Padding:** 14px 16px (10px 12px on small phones); photo area is 4:3.
-- **Sold out:** the card fades to 55% and the photo turns grayscale, with the "Sin stock" label in Terracotta Alert.
+- **Sold out:** only the photo fades (55%, grayscale); the name and price turn Soft Cocoa and the "Sin stock" label stays full-strength Terracotta Alert, so every text keeps at least 4.5:1.
 
 ### Inputs / Fields
-- **Style:** 1.5px Oat Line border, white, 10px radius, 11px 13px padding; the search box is a pill.
+- **Style:** 1.5px control-edge border (`--borde-control`, ink mixed 55% into white, about 3.6:1; Oat Line is too faint to mark a field), white, 10px radius, 11px 13px padding; the search box is a pill. Oat Line stays for decorative dividers and card borders.
 - **Focus:** browser default today (no custom focus ring yet).
 - **Quantity stepper:** pill track in Cream with two white 32px round buttons.
 
