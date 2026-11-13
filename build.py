@@ -465,6 +465,15 @@ def pista_carrito():
     )
 
 
+def aviso_eventos():
+    """Aviso arriba del catálogo (sobre los filtros) que lleva a Catering; scrollea con el header."""
+    return (
+        f'<div class="aviso-eventos"><div class="envoltura">'
+        f'<a href="{PAGINA_PEDIDOS}">¿Tenés un evento? Mirá lo que ofrecemos <span aria-hidden="true">→</span></a>'
+        f'</div></div>'
+    )
+
+
 def texto_pie(config, ahora):
     """Texto del pie de las páginas de precios (catálogo y cotizador): una sola fuente para que no se desfasen."""
     pie = f" · {html.escape(config['pie'])}" if config.get("pie") else ""
@@ -595,6 +604,7 @@ def main():
         "{{REDES}}": redes(config, quienes, pedidos),
         "{{MODULO}}": modulo_nav("catalogo", pedidos),
         "{{MODAL_QUIENES}}": modal_quienes(config) if quienes == "modal" else "",
+        "{{AVISO_EVENTOS}}": aviso_eventos() if pedidos else "",
         "{{PISTA_CARRITO}}": pista_carrito() if pedidos else "",
         "{{DATOS}}": json.dumps(
             {

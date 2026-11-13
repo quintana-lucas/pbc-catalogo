@@ -14,6 +14,11 @@
 {{FUENTES}}
 <style>
 {{ESTILOS_BASE}}
+  /* Aviso de eventos: fuera de la barra sticky, así se va con el scroll como el header */
+  .aviso-eventos { background: var(--papel); border-bottom: 1px solid var(--linea); text-align: center; }
+  .aviso-eventos .envoltura { padding-top: 10px; padding-bottom: 10px; }
+  .aviso-eventos a { color: var(--tinta); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+
   /* Barra de filtros */
   .barra {
     position: sticky; top: 0; z-index: 5;
@@ -169,7 +174,7 @@
 </head>
 <body>
 {{ENCABEZADO}}
-
+{{AVISO_EVENTOS}}
 <div class="barra">
   <div class="envoltura">
     <div class="chips" id="chips" role="toolbar" aria-label="Categorías"></div>
