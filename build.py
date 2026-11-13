@@ -312,17 +312,44 @@ def modal_quienes(config):
     )
 
 
+MENU_SVG = (
+    '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
+    'stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>'
+)
+MENU_JS = (
+    "<script>(function(){var m=document.getElementById('menu-modulos'),b=document.querySelector('.menu-boton');"
+    "if(!m||!b)return;"
+    "b.addEventListener('click',function(){m.showModal();b.setAttribute('aria-expanded','true');});"
+    "m.addEventListener('close',function(){b.setAttribute('aria-expanded','false');b.focus();});"
+    "m.addEventListener('click',function(e){if(e.target===m||e.target.closest('.menu-cerrar'))m.close();});"
+    "})();</script>"
+)
+
+
 def modulo_nav(actual, pedidos):
-    """Barra del encabezado por módulo: título del módulo actual y un botón de texto al otro.
-    actual: "catalogo" o "pedidos". Sin catering activo no hay otro módulo y no hay botón."""
-    if actual == "catalogo":
-        titulo, otro = "Catálogo", (PAGINA_PEDIDOS, NOMBRE_CATERING)
-    else:
-        titulo, otro = NOMBRE_CATERING, (PAGINA_CATALOGO, "Catálogo")
-    boton = f'<a class="modulo-otro" href="{otro[0]}">{html.escape(otro[1])}</a>' if (pedidos or actual == "pedidos") else ""
-    return (
-        f'<div class="envoltura modulo-barra"><p class="modulo-titulo">{html.escape(titulo)}</p>{boton}</div>'
+    """Barra del encabezado por módulo: botón de menú y título del módulo actual. El menú es un drawer
+    (también en desktop) con los módulos. actual: "catalogo" o "pedidos". Sin catering activo no hay otro
+    módulo y no hay menú."""
+    titulo = "Catálogo" if actual == "catalogo" else NOMBRE_CATERING
+    barra = f'<p class="modulo-titulo">{html.escape(titulo)}</p>'
+    if not (pedidos or actual == "pedidos"):
+        return f'<div class="envoltura modulo-barra">{barra}</div>'
+    modulos = ((PAGINA_CATALOGO, "Catálogo", "catalogo"), (PAGINA_PEDIDOS, NOMBRE_CATERING, "pedidos"))
+    actual_attr = ' aria-current="page"'
+    enlaces = "".join(
+        f'<li><a href="{href}"{actual_attr if clave == actual else ""}>{html.escape(nombre)}</a></li>'
+        for href, nombre, clave in modulos
     )
+    boton = (
+        '<button class="menu-boton" type="button" aria-expanded="false" aria-controls="menu-modulos" '
+        f'aria-label="Menú">{MENU_SVG}</button>'
+    )
+    drawer = (
+        '<dialog class="menu-drawer" id="menu-modulos" aria-label="Menú">'
+        '<button class="menu-cerrar" type="button" aria-label="Cerrar menú">×</button>'
+        f'<nav aria-label="Secciones"><ul>{enlaces}</ul></nav></dialog>'
+    )
+    return f'<div class="envoltura modulo-barra">{boton}{barra}</div>{drawer}{MENU_JS}'
 
 
 def redes(config, quienes=None, pedidos=False, pagina_actual=None):

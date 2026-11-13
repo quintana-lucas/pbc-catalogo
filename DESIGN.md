@@ -198,7 +198,7 @@ Pills (999px) for every button, chip and search field; round (50%) 40px icon but
 - **Quantity stepper:** pill track in Cream with two white 32px round buttons.
 
 ### Navigation
-- Header with icon buttons (WhatsApp, Instagram, Catering, optional «¿Quiénes somos?»), each with `aria-label` and `title`; the current page uses `aria-current`. The sticky category chips are the in-page navigation.
+- Header icon buttons (WhatsApp, Instagram, optional «¿Quiénes somos?»), each with `aria-label` and `title`. Under the logo, a module bar: a round olive menu button plus the current module title (Catálogo or Catering). The button opens a left drawer (a modal `<dialog>`, on desktop too) listing the modules, with the current one marked `aria-current`. With Catering off there is no menu. The sticky category chips are the in-page navigation.
 
 ### The Comanda (signature)
 The summary of a catering quote: white paper, 1.5px Oat Line border, zigzag bottom edge, dashed dividers between lines, amounts in tabular numerals and a large total in Bricolage Grotesque. It updates live (`aria-live`). Planned: a ruled-notebook look and a fixed bar on mobile.

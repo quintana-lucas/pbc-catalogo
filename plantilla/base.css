@@ -40,14 +40,32 @@
   }
   .redes a:hover, .redes button:hover { background: var(--secundario-osc); }
 
-  /* Barra del módulo: título a la izquierda y un único botón de texto hacia el otro módulo */
-  .modulo-barra { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 10px; }
+  /* Barra del módulo: botón de menú y título del módulo actual */
+  header .modulo-barra { display: flex; align-items: center; justify-content: flex-start; gap: 12px; margin-top: 10px; }
   .modulo-titulo { margin: 0; font-size: 1.25rem; font-weight: 800; color: var(--tinta); }
-  .modulo-otro {
-    border-radius: 999px; padding: 7px 16px; font-weight: 800; text-decoration: none;
+  .menu-boton {
+    width: 40px; height: 40px; border: 0; border-radius: 50%; cursor: pointer; display: grid; place-items: center;
     color: var(--sobre-secundario); background: var(--secundario);
   }
-  .modulo-otro:hover { background: var(--secundario-osc); }
+  .menu-boton:hover { background: var(--secundario-osc); }
+  /* Drawer de módulos: sale desde la izquierda, también en desktop */
+  .menu-drawer {
+    margin: 0; height: 100dvh; max-height: none; width: min(300px, 85vw); padding: 64px 16px 24px;
+    border: 0; background: var(--papel); color: var(--tinta); box-shadow: 0 10px 40px rgba(0,0,0,.3);
+  }
+  .menu-drawer::backdrop { background: rgba(0,0,0,.5); }
+  .menu-drawer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+  .menu-drawer a {
+    display: block; padding: 12px 14px; border-radius: 12px; font-weight: 800; font-size: 1.1rem;
+    color: var(--tinta); text-decoration: none;
+  }
+  .menu-drawer a:hover { background: var(--fondo); }
+  .menu-drawer a[aria-current] { background: var(--secundario); color: var(--sobre-secundario); }
+  .menu-cerrar {
+    position: absolute; top: 12px; right: 12px; width: 40px; height: 40px; border: 0; border-radius: 50%;
+    background: var(--fondo); color: var(--tinta); font-size: 1.5rem; line-height: 1; cursor: pointer;
+  }
+  .menu-cerrar:hover { background: var(--linea); }
 
   /* Botón de envío/presupuesto usa color secundario (verde oliva) */
   .btn-orden {
@@ -81,7 +99,7 @@
     header .envoltura { row-gap: 8px; }
     .modulo-barra { margin-top: 6px; }
     .modulo-titulo { font-size: 1.1rem; }
-    .modulo-otro { padding: 6px 14px; }
+    .menu-boton { width: 36px; height: 36px; }
     .redes { gap: 6px; }
     .redes a, .redes button { width: 34px; height: 34px; }
     .redes svg { width: 18px; height: 18px; }
