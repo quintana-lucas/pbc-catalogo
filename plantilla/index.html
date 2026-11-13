@@ -26,14 +26,14 @@
   .chips { display: flex; gap: 8px; overflow-x: auto; flex: 1 1 auto; scrollbar-width: none; }
   .chips::-webkit-scrollbar { display: none; }
   .chip {
-    border: 1px solid var(--linea); background: var(--papel); color: var(--tinta);
+    border: 1px solid var(--borde-control); background: var(--papel); color: var(--tinta);
     padding: 8px 16px; border-radius: 999px; font: inherit; font-weight: 600;
     cursor: pointer; white-space: nowrap;
   }
   .chip[aria-pressed="true"] { background: var(--secundario); color: var(--sobre-secundario); border-color: var(--secundario); }
   .buscar {
     flex: 1 1 200px; max-width: 280px;
-    border: 1px solid var(--linea); border-radius: 999px; padding: 9px 16px;
+    border: 1px solid var(--borde-control); border-radius: 999px; padding: 9px 16px;
     font: inherit; background: var(--papel);
   }
 
@@ -85,8 +85,9 @@
     font-size: 1.1rem; font-weight: 800; cursor: pointer; color: var(--tinta);
   }
   .cantidad span { min-width: 22px; text-align: center; font-weight: 800; }
-  .agotado { opacity: .55; }
-  .agotado .foto { filter: grayscale(1); }
+  /* Agotado: se apaga la foto, no el texto (con opacity en toda la tarjeta "Sin stock" quedaba en 2.5:1) */
+  .agotado .foto { filter: grayscale(1); opacity: .55; }
+  .agotado h3, .agotado .precio { color: var(--suave); }
   .etiqueta-agotado {
     font-size: .8rem; font-weight: 800; color: var(--alerta);
     text-transform: uppercase; letter-spacing: .04em;
@@ -179,7 +180,7 @@
 
 <main class="envoltura">
   <div class="aviso">{{AVISO}}</div>
-  <div id="catalogo"></div>
+  <div id="catalogo" tabindex="-1" style="outline: 0"></div>
 </main>
 
 <footer>{{PIE}}</footer>
@@ -353,13 +354,20 @@
     carrito[id] = Math.max(0, (carrito[id] || 0) + (mas ? 1 : -1));
     if (!carrito[id]) delete carrito[id];
     guardar();
-    document.querySelector(`[data-ctrl="${CSS.escape(id)}"]`).innerHTML = controles(porId[id]);
+    const ctrl = document.querySelector(`[data-ctrl="${CSS.escape(id)}"]`);
+    ctrl.innerHTML = controles(porId[id]);
+    // Los botones se reemplazan: el foco vuelve al mismo botón (o a "Agregar" si la cantidad llegó a 0)
+    (ctrl.querySelector(mas ? "[data-mas]" : "[data-menos]") || ctrl.querySelector("button"))?.focus();
     actualizarPedido();
   });
   // Tocar fuera del ícono o apretar Escape cierra el globo abierto
   document.addEventListener("click", e => { if (!e.target.closest("[data-info]")) cerrarGlobos(); });
   document.addEventListener("keydown", e => { if (e.key === "Escape") cerrarGlobos(); });
-  document.getElementById("vaciar").onclick = () => { carrito = {}; guardar(); pintar(); actualizarPedido(); };
+  // La barra del pedido se esconde al vaciar: el foco pasa al catálogo para no perderse
+  document.getElementById("vaciar").onclick = () => {
+    carrito = {}; guardar(); pintar(); actualizarPedido();
+    document.getElementById("catalogo").focus({ preventScroll: true });
+  };
 
   // ¿Quiénes somos? en modal (si está configurado como página, el botón es un link y no hay modal)
   const modal = document.getElementById("quienes");
