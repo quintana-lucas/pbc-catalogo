@@ -29,6 +29,7 @@ Everything client-specific lives in `config.json`; `build.py`, `plantilla/` and 
 
 ## Gotchas
 
+- The header logo must link to the catalog (`./`) on every page, including the catalog itself (where it sits inside the `<h1>`). `marca()` in `build.py` enforces it; keep it when changing the header.
 - `config.json` key `pedidos_especiales` keeps its name even though the UI calls the module "Catering"; the design doc says not to rename it.
 - Product photos are matched case-sensitively against `img/` (servers are case-sensitive); `revisar_fotos()` fixes the case or falls back to the emoji and warns.
 - `config.json` has a blank `dominio`, so the live-site comparison and canonical/OG metadata are skipped until it is set.

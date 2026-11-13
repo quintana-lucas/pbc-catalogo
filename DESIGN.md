@@ -206,6 +206,7 @@ The summary of a catering quote: white paper, 1.5px Oat Line border, zigzag bott
 ## Do's and Don'ts
 
 ### Do:
+- **Do** make the header logo a link to the catalog (`./`) on every page, the catalog included.
 - **Do** use Cellar Burgundy to add an item and Olive Grove to send or navigate.
 - **Do** keep cream as the page background and white for surfaces that hold content.
 - **Do** keep every tappable control at least 34px, and prefer 40px for header icons.
