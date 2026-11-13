@@ -20,19 +20,22 @@
 
   /* Encabezado: logo centrado sobre blanco (el logo está pensado para fondo claro) */
   header { background: var(--papel); border-bottom: 3px solid var(--acento); padding: var(--header-padding); }
-  header .envoltura { position: relative; display: flex; justify-content: center; align-items: center; }
-  .marca { margin: 0; line-height: 0; }
-  .logo { max-height: var(--logo-max-height); width: auto; }
-  /* Sellos (Sin TACC, IQF): a la izquierda del logo */
-  .sellos {
-    position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
-    list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px;
-    color: var(--secundario); font-weight: 800; font-size: .95rem;
+  header .envoltura {
+    display: grid; grid-template-columns: 1fr auto 1fr; grid-template-areas: "modulo logo redes";
+    align-items: center; column-gap: 12px;
   }
-  .sellos li { display: flex; align-items: center; gap: 8px; }
-  .sellos img, .sellos .copo { width: 34px; height: 34px; flex-shrink: 0; }
-  .sellos .copo { display: grid; place-items: center; font-size: 1.6rem; line-height: 1; }
-  .redes { position: absolute; right: 16px; top: 0; display: flex; gap: 8px; }
+  .marca { grid-area: logo; margin: 0; line-height: 0; justify-self: center; }
+  .logo { max-height: var(--logo-max-height); width: auto; }
+  /* Sellos (Sin TACC, IQF): fila debajo del logo, solo si el cliente tiene */
+  .sellos {
+    list-style: none; margin: 8px 16px 0; padding: 0; display: flex; flex-wrap: nowrap; justify-content: safe center; gap: 16px; overflow-x: auto; scrollbar-width: none;
+    color: var(--secundario); font-weight: 800; font-size: .85rem;
+  }
+  .sellos::-webkit-scrollbar { display: none; }
+  .sellos li { display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0; }
+  .sellos img, .sellos .copo { width: 26px; height: 26px; flex-shrink: 0; }
+  .sellos .copo { display: grid; place-items: center; font-size: 1.25rem; line-height: 1; }
+  .redes { grid-area: redes; justify-self: end; display: flex; gap: 8px; }
   /* Redes y accesos del encabezado: verde, para que el bordó quede solo en los botones de acción */
   .redes a, .redes button {
     width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center;
@@ -41,7 +44,7 @@
   .redes a:hover, .redes button:hover { background: var(--secundario-osc); }
 
   /* Barra del módulo: botón de menú y título del módulo actual */
-  header .modulo-barra { display: flex; align-items: center; justify-content: flex-start; gap: 12px; margin-top: 10px; }
+  .modulo-barra { grid-area: modulo; justify-self: start; display: flex; align-items: center; gap: 10px; min-width: 0; }
   .modulo-titulo { margin: 0; font-size: 1.25rem; font-weight: 800; color: var(--tinta); }
   .menu-boton {
     width: 40px; height: 40px; border: 0; border-radius: 50%; cursor: pointer; display: grid; place-items: center;
@@ -80,25 +83,14 @@
 
   footer { text-align: center; color: var(--suave); font-size: .85rem; padding: 0 16px 100px; }
 
-  /* Con poco ancho, sellos y botones no entran al costado del logo: van en una fila debajo */
+  /* Con poco ancho: logo y botones más chicos, la fila de tres zonas se mantiene */
   @media (max-width: 640px) {
-    header { padding: 10px 0; --logo-max-height: 96px; }
-    header .envoltura {
-      display: grid; grid-template-columns: 1fr auto; grid-template-areas: "logo logo" "sellos redes";
-      row-gap: 12px; align-items: center;
-    }
-    .marca { grid-area: logo; justify-self: center; }
-    .sellos { grid-area: sellos; position: static; transform: none; flex-direction: row; gap: 14px; font-size: .85rem; }
-    .sellos li { gap: 5px; }
-    .sellos img, .sellos .copo { width: 26px; height: 26px; }
-    .sellos .copo { font-size: 1.25rem; }
-    .redes { grid-area: redes; position: static; }
+    header { padding: 10px 0; --logo-max-height: 72px; }
+    header .envoltura { column-gap: 8px; }
   }
   @media (max-width: 480px) {
-    header { padding: 8px 0; --logo-max-height: 68px; }
-    header .envoltura { row-gap: 8px; }
-    .modulo-barra { margin-top: 6px; }
-    .modulo-titulo { font-size: 1.1rem; }
+    header { padding: 8px 0; --logo-max-height: 60px; }
+    .modulo-titulo { font-size: 1.05rem; }
     .menu-boton { width: 36px; height: 36px; }
     .redes { gap: 6px; }
     .redes a, .redes button { width: 34px; height: 34px; }

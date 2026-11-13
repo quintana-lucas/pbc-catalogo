@@ -228,7 +228,7 @@ PEDIDOS_SVG = (
 
 
 def sellos(config):
-    """Sellos a la izquierda del logo (por ejemplo "Sin TACC"). Cada uno con imagen o emoji; vacío si no hay."""
+    """Sellos en una fila debajo del encabezado (por ejemplo "Sin TACC"). Cada uno con imagen o emoji; vacío si no hay."""
     items = []
     for s in config.get("sellos", []):
         if s.get("imagen"):
@@ -333,7 +333,7 @@ def modulo_nav(actual, pedidos):
     titulo = "Catálogo" if actual == "catalogo" else NOMBRE_CATERING
     barra = f'<p class="modulo-titulo">{html.escape(titulo)}</p>'
     if not (pedidos or actual == "pedidos"):
-        return f'<div class="envoltura modulo-barra">{barra}</div>'
+        return f'<div class="modulo-barra">{barra}</div>'
     modulos = ((PAGINA_CATALOGO, "Catálogo", "catalogo"), (PAGINA_PEDIDOS, NOMBRE_CATERING, "pedidos"))
     actual_attr = ' aria-current="page"'
     enlaces = "".join(
@@ -349,7 +349,7 @@ def modulo_nav(actual, pedidos):
         '<button class="menu-cerrar" type="button" aria-label="Cerrar menú">×</button>'
         f'<nav aria-label="Secciones"><ul>{enlaces}</ul></nav></dialog>'
     )
-    return f'<div class="envoltura modulo-barra">{boton}{barra}</div>{drawer}{MENU_JS}'
+    return f'<div class="modulo-barra">{boton}{barra}</div>{drawer}{MENU_JS}'
 
 
 def redes(config, quienes=None, pedidos=False, pagina_actual=None):

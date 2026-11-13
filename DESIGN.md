@@ -156,7 +156,7 @@ A warm, earthy palette drawn from the logo: a deep wine red, an olive green and 
 
 A centered wrapper (max 1100px on the catalog, 1040px on Catering) with 16px side gutters. The catalog is a responsive grid of cards (`minmax(230px, 1fr)`, 16px gap) that becomes two columns with a 10px gap at 480px and below. A sticky category bar (chips + search, solid cream background with a soft shadow) stays at the top while scrolling.
 
-The header is white with the logo centered, optional badges (sellos) at the left and round icon buttons at the right. At 640px and below the badges and icons drop to a row under the logo. Catering is a two-column layout (form 1.1fr, comanda .9fr, 40px gap) that stacks at 760px. Spacing rhythm: 6, 10, 12, 16, 24, 40px.
+The header is white, one row with three zones on every screen size: the menu button plus the current module title on the left, the logo centered, and the round icon buttons on the right. Optional badges (sellos) sit in a single non-wrapping row under it (it scrolls sideways if it overflows), at mobile too. Catering is a two-column layout (form 1.1fr, comanda .9fr, 40px gap) that stacks at 760px. Spacing rhythm: 6, 10, 12, 16, 24, 40px.
 
 On mobile, descriptions are hidden and replaced by an "i" button with a small tooltip balloon, to keep cards short. The floating order bar sits 16px from the bottom edge, so the footer keeps 100px of bottom padding.
 
@@ -198,7 +198,7 @@ Pills (999px) for every button, chip and search field; round (50%) 40px icon but
 - **Quantity stepper:** pill track in Cream with two white 32px round buttons.
 
 ### Navigation
-- Header icon buttons (WhatsApp, Instagram, optional «¿Quiénes somos?»), each with `aria-label` and `title`. Under the logo, a module bar: a round olive menu button plus the current module title (Catálogo or Catering). The button opens a left drawer (a modal `<dialog>`, on desktop too) listing the modules, with the current one marked `aria-current`. With Catering off there is no menu. The sticky category chips are the in-page navigation.
+- Header icon buttons (WhatsApp, Instagram, optional «¿Quiénes somos?»), each with `aria-label` and `title`. On the left of the header row: a round olive menu button plus the current module title (Catálogo or Catering). The button opens a left drawer (a modal `<dialog>`, on desktop too) listing the modules, with the current one marked `aria-current`. With Catering off there is no menu. The sticky category chips are the in-page navigation.
 
 ### The Comanda (signature)
 The summary of a catering quote: white paper, 1.5px Oat Line border, zigzag bottom edge, dashed dividers between lines, amounts in tabular numerals and a large total in Bricolage Grotesque. It updates live (`aria-live`). Planned: a ruled-notebook look and a fixed bar on mobile.
