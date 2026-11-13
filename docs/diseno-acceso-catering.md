@@ -82,3 +82,5 @@ lleva al cotizador. Reemplaza al banner actual (`.banner-pedidos`). Umbral: 30 u
 2. Header y navegación nuevos (sin "Volver", un botón al otro módulo, logo a portada).
 3. Comanda como papel rayado, con barra fija en celular.
 4. Pista del carrito (después).
+
+> **Actualización:** se descartó la portada. `/` vuelve a ser el catálogo y el logo de las otras páginas lleva a `./`; el acceso a Catering es el botón de la barra del módulo. Lo de arriba sobre la portada y `catalogo.html` quedó como historia.

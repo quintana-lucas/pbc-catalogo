@@ -77,6 +77,11 @@
     .redes { grid-area: redes; position: static; }
   }
   @media (max-width: 480px) {
+    header { padding: 8px 0; --logo-max-height: 68px; }
+    header .envoltura { row-gap: 8px; }
+    .modulo-barra { margin-top: 6px; }
+    .modulo-titulo { font-size: 1.1rem; }
+    .modulo-otro { padding: 6px 14px; }
     .redes { gap: 6px; }
     .redes a, .redes button { width: 34px; height: 34px; }
     .redes svg { width: 18px; height: 18px; }
