@@ -48,7 +48,7 @@ MINIMO_RESPECTO_ANTERIOR = 0.5
 MODOS_QUIENES = ("modal", "pagina", "oculto")
 PAGINA_QUIENES = "quienes-somos.html"
 PAGINA_PEDIDOS = "pedidos-especiales.html"
-PAGINA_CATALOGO = "catalogo.html"
+PAGINA_CATALOGO = "./"  # el catálogo es la página de entrada (index.html)
 NOMBRE_CATERING = "Catering"  # lo que ve el usuario; la clave de config.json sigue siendo "pedidos_especiales"
 # Claves de config.json sin las que no se puede armar la página.
 CONFIG_OBLIGATORIAS = ("nombre", "whatsapp")
@@ -340,7 +340,7 @@ def redes(config, quienes=None, pedidos=False, pagina_actual=None):
 def metadatos(config, titulo, ruta=""):
     """Canonical, Open Graph (vista previa al compartir el link) y datos estructurados para Google.
 
-    ruta: la página dentro del sitio ("" es la portada). Los datos del negocio van solo en la portada.
+    ruta: la página dentro del sitio ("" es el catálogo). Los datos del negocio van solo en el catálogo.
     """
     if not config.get("dominio"):
         return ""
@@ -411,28 +411,6 @@ def robots_y_sitemap(config, ahora, rutas):
             + "</urlset>\n"
         )
     (SALIDA / "robots.txt").write_text(robots)
-
-
-CATALOGO_SVG = (
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" '
-    'stroke-linejoin="round" aria-hidden="true"><path d="M4 11a8 8 0 0 1 16 0"/><path d="M3 11h18"/>'
-    '<path d="M5 11l1 8h12l1-8"/><path d="M12 3v2"/></svg>'
-)
-CATERING_SVG = (
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" '
-    'stroke-linejoin="round" aria-hidden="true"><path d="M3 18h18"/><path d="M4 18a8 8 0 0 1 16 0"/>'
-    '<path d="M12 8V6"/><path d="M10 6h4"/></svg>'
-)
-
-
-def puertas(pedidos):
-    """Las dos puertas de la portada. Sin el módulo de catering queda solo el catálogo."""
-    def puerta(href, clase, svg, nombre, detalle):
-        return f'<a class="puerta {clase}" href="{href}">{svg}<strong>{nombre}</strong><span>{detalle}</span></a>'
-    resultado = puerta(PAGINA_CATALOGO, "catalogo", CATALOGO_SVG, "Catálogo", "viandas y productos")
-    if pedidos:
-        resultado += puerta(PAGINA_PEDIDOS, "catering", CATERING_SVG, NOMBRE_CATERING, "eventos y pedidos especiales")
-    return resultado
 
 
 UMBRAL_PISTA_CARRITO = 30  # unidades en el carrito a partir de las cuales se muestra la pista de Catering
@@ -564,21 +542,12 @@ def main():
         )
         return f'<h1 class="marca">{imagen}</h1>' if etiqueta == "h1" else f'<a class="marca" href="./">{imagen}</a>'
     # En el catálogo el logo es el h1; en las demás páginas es el link de vuelta.
-    comunes["{{MARCA}}"] = marca("a", comunes["{{NOMBRE}}"] + " — ir a la portada")
-    # La portada es "/": solo para elegir. El catálogo vive en catalogo.html.
-    portada = rellenar("portada.html", {
+    comunes["{{MARCA}}"] = marca("a", comunes["{{NOMBRE}}"] + " — ir al catálogo")
+    paginas = {"index.html": rellenar("index.html", {
         **comunes,
         "{{MARCA}}": marca("h1", comunes["{{NOMBRE}}"]),
         "{{TITULO}}": html.escape(titulo),
         "{{METADATOS}}": metadatos(config, titulo),
-        "{{PUERTAS}}": puertas(pedidos),
-        "{{PAGINA_CATALOGO}}": PAGINA_CATALOGO,
-    })
-    paginas = {"index.html": portada, PAGINA_CATALOGO: rellenar("index.html", {
-        **comunes,
-        "{{MARCA}}": marca("h1", comunes["{{NOMBRE}}"]),
-        "{{TITULO}}": html.escape(titulo),
-        "{{METADATOS}}": metadatos(config, titulo, PAGINA_CATALOGO),
         "{{ESLOGAN}}": html.escape(config.get("eslogan", "")),
         "{{AVISO}}": html.escape(config.get("aviso", "")),
         "{{REDES}}": redes(config, quienes, pedidos),
