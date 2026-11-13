@@ -582,9 +582,10 @@ def main():
             f'<img class="logo" src="{comunes["{{LOGO}}"]}" alt="{alt}" '
             f'width="{comunes["{{LOGO_ANCHO}}"]}" height="{comunes["{{LOGO_ALTO}}"]}">'
         )
-        return f'<h1 class="marca">{imagen}</h1>' if etiqueta == "h1" else f'<a class="marca" href="./">{imagen}</a>'
-    # En el catálogo el logo es el h1; en las demás páginas es el link de vuelta.
-    comunes["{{MARCA}}"] = marca("a", comunes["{{NOMBRE}}"] + " — ir al catálogo")
+        enlace = f'<a href="./">{imagen}</a>'
+        return f'<h1 class="marca">{enlace}</h1>' if etiqueta == "h1" else f'<div class="marca">{enlace}</div>'
+    # El logo de TODAS las páginas es un link al catálogo ("./"); en el catálogo además es el h1.
+    comunes["{{MARCA}}"] = marca("div", comunes["{{NOMBRE}}"] + " — ir al catálogo")
     paginas = {"index.html": rellenar("index.html", {
         **comunes,
         "{{MARCA}}": marca("h1", comunes["{{NOMBRE}}"]),
