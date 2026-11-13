@@ -18,9 +18,8 @@
   .barra {
     position: sticky; top: 0; z-index: 5;
     background: var(--fondo);
-    background: color-mix(in srgb, var(--fondo) 92%, transparent);
-    backdrop-filter: blur(8px);
     border-bottom: 1px solid var(--linea);
+    box-shadow: 0 2px 6px rgba(0,0,0,.06);
   }
   .barra .envoltura { display: flex; flex-wrap: wrap; gap: 10px; padding-top: 12px; padding-bottom: 12px; align-items: center; }
   .chips { display: flex; gap: 8px; overflow-x: auto; flex: 1 1 auto; scrollbar-width: none; }

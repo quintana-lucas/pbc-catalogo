@@ -154,7 +154,7 @@ A warm, earthy palette drawn from the logo: a deep wine red, an olive green and 
 
 ## Layout
 
-A centered wrapper (max 1100px on the catalog, 1040px on Catering) with 16px side gutters. The catalog is a responsive grid of cards (`minmax(230px, 1fr)`, 16px gap) that becomes two columns with a 10px gap at 480px and below. A sticky category bar (chips + search, blurred cream background) stays at the top while scrolling.
+A centered wrapper (max 1100px on the catalog, 1040px on Catering) with 16px side gutters. The catalog is a responsive grid of cards (`minmax(230px, 1fr)`, 16px gap) that becomes two columns with a 10px gap at 480px and below. A sticky category bar (chips + search, solid cream background with a soft shadow) stays at the top while scrolling.
 
 The header is white with the logo centered, optional badges (sellos) at the left and round icon buttons at the right. At 640px and below the badges and icons drop to a row under the logo. Catering is a two-column layout (form 1.1fr, comanda .9fr, 40px gap) that stacks at 760px. Spacing rhythm: 6, 10, 12, 16, 24, 40px.
 
