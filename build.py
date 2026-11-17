@@ -501,9 +501,15 @@ def pagina_pedidos(config, comunes, quienes):
         "{{REDES}}": redes(config, quienes, True, "pedidos"),
         "{{MODULO}}": modulo_nav("pedidos", True),
         "{{PEDIDOS_TITULO}}": html.escape(NOMBRE_CATERING),
-        "{{PEDIDOS_TEXTO}}": html.escape(modulo.get("texto", "")),
+        "{{PEDIDOS_TEXTO}}": parrafos_intro(modulo.get("texto", "")),
         "{{DATOS}}": json.dumps(datos, ensure_ascii=False).replace("</", "<\\/"),
     })
+
+
+def parrafos_intro(texto):
+    """Descripción de Catering: un string o una lista de strings; cada uno sale en su propio <p>."""
+    partes = [texto] if isinstance(texto, str) else texto
+    return "\n  ".join(f'<p class="intro">{html.escape(p)}</p>' for p in partes if p.strip())
 
 
 def rellenar(plantilla, reemplazos):
