@@ -52,7 +52,10 @@
   "pedidos_especiales": {
     "activo": true,
     "titulo": "Catering",
-    "texto": "Elegí la cantidad de invitados y lo que querés incluir. Te mostramos un estimado y, si te sirve, lo confirmamos por WhatsApp.",
+    "texto": [
+      "En PBC elaboramos comida casera de calidad pensada para compartir. Nuestra propuesta de catering está diseñada para todo tipo de eventos y reuniones donde se busca ofrecer comida rica, abundante y fácil de servir.",
+      "Elegí la cantidad de invitados y lo que querés incluir. Te mostramos un estimado, avanza el pedido por WhatsApp y coordinamos los detalles, modificaciones o propuestas especiales que se adapten a tu evento."
+    ],
     "banner": "¿Catering, un evento o un pedido especial?",
     "boton": "Cotizar catering",
     "minimo_personas": 10,
