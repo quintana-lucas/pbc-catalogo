@@ -76,8 +76,44 @@ de datos.
   - `Tipo`: `Opción` o `Extra`.
   - `Nombre`: lo que ve el cliente.
   - `Descripción`: texto chico opcional (también se acepta el typo `Descipción`).
-  - `Precio`: entero en pesos; vacío = «a consultar» y no suma.
-  - `Cobro`: `por persona` o `fijo` (las opciones siempre van por persona).
+  - `Precio`: monto en pesos, se redondea al entero (se acepta `6500`, `$6.500`
+    o `6.500,50`: el punto es de miles y la coma de decimales). Vacío, `0` o
+    ilegible = «a consultar»: se muestra así y no suma al total.
+  - `Cobro`: cómo se cobra la fila, ver abajo.
+
+  **Tipos de `Cobro`.** Se compara ignorando mayúsculas y tildes:
+
+  | `Cobro` | Cómo se calcula | Se muestra como | Ejemplo de fila |
+  |---|---|---|---|
+  | `por persona` | `Precio × cantidad de invitados` | `$6.500 por invitado`; en la comanda, `30 × $6.500` | `Opción,Mesa de panificados,,6500,por persona` |
+  | `fijo` | `Precio`, una sola vez, sin importar los invitados | `$12.000` | `Extra,Entrega en CABA,,12000,fijo` |
+
+  **Próximamente: `por unidad`** (todavía no está hecho; está en la cola de
+  tareas). Va a ser un tercer tipo de `Cobro`, para cosas que se piden por
+  cantidad y no dependen de los invitados (por ejemplo, empanadas):
+  - Usa una columna nueva, `Mínimo`, que solo se lee en las filas `por unidad`
+    (en las demás se ignora).
+  - Se calcula como `Precio × unidades`, una sola vez, sin importar cuántos
+    invitados haya.
+  - En la página, cada ítem por unidad muestra su mínimo y, al tildarlo,
+    aparece un selector de cantidad. El selector no deja bajar del mínimo,
+    pero sí subir.
+  - Ejemplo de fila: `Extra,Docena de empanadas,,9000,por unidad,2` (con
+    `Mínimo` como última columna).
+
+  Cuando se implemente, esta sección pasa a la tabla de arriba.
+
+  Reglas que conviene tener presentes:
+  - Las **opciones** (`Tipo` = `Opción`) siempre se cobran por persona, diga lo
+    que diga `Cobro`.
+  - En los **extras**, un `Cobro` que termina en «persona» (`por persona`,
+    `persona`) es por persona; **cualquier otra cosa** (incluido vacío o un
+    typo, como `por invitado`) se toma como `fijo`, sin aviso en el log.
+  - Con 0 invitados, las filas por persona suman $0; las fijas suman igual.
+  - El «precio por invitado» de la comanda es `total ÷ invitados` y solo
+    aparece si hay invitados cargados.
+  - Filas sin `Nombre` se saltean; con un `Tipo` distinto de `Opción` o `Extra`
+    se ignoran y el build avisa.
 
 La página muestra las opciones (la primera viene tildada) y los extras para
 tildar (se pueden combinar) y, al lado, una **comanda** con el desglose, el
