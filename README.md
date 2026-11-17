@@ -80,6 +80,8 @@ de datos.
     o `6.500,50`: el punto es de miles y la coma de decimales). Vacío, `0` o
     ilegible = «a consultar»: se muestra así y no suma al total.
   - `Cobro`: cómo se cobra la fila, ver abajo.
+  - `Mínimo`: solo para las filas `por unidad`: unidades mínimas, entero desde 1
+    (vacío o inválido = 1 y el build avisa). En las demás filas se ignora.
 
   **Tipos de `Cobro`.** Se compara ignorando mayúsculas y tildes:
 
@@ -87,21 +89,7 @@ de datos.
   |---|---|---|---|
   | `por persona` | `Precio × cantidad de invitados` | `$6.500 por invitado`; en la comanda, `30 × $6.500` | `Opción,Mesa de panificados,,6500,por persona` |
   | `fijo` | `Precio`, una sola vez, sin importar los invitados | `$12.000` | `Extra,Entrega en CABA,,12000,fijo` |
-
-  **Próximamente: `por unidad`** (todavía no está hecho; está en la cola de
-  tareas). Va a ser un tercer tipo de `Cobro`, para cosas que se piden por
-  cantidad y no dependen de los invitados (por ejemplo, empanadas):
-  - Usa una columna nueva, `Mínimo`, que solo se lee en las filas `por unidad`
-    (en las demás se ignora).
-  - Se calcula como `Precio × unidades`, una sola vez, sin importar cuántos
-    invitados haya.
-  - En la página, cada ítem por unidad muestra su mínimo y, al tildarlo,
-    aparece un selector de cantidad. El selector no deja bajar del mínimo,
-    pero sí subir.
-  - Ejemplo de fila: `Extra,Docena de empanadas,,9000,por unidad,2` (con
-    `Mínimo` como última columna).
-
-  Cuando se implemente, esta sección pasa a la tabla de arriba.
+  | `por unidad` | `Precio × unidades`, una sola vez, sin importar los invitados; solo en extras | `$9.000` y el mínimo (la pantalla del selector de cantidad todavía no está hecha) | `Extra,Docena de empanadas,,9000,por unidad,2` (`Mínimo` es la última columna) |
 
   Reglas que conviene tener presentes:
   - Las **opciones** (`Tipo` = `Opción`) siempre se cobran por persona, diga lo
