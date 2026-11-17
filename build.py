@@ -111,7 +111,7 @@ def leer_catering(config):
     """Opciones y extras del cotizador. Salen del link "catering_csv" (Google Sheets publicada como CSV).
     Si el link está vacío, no responde o la hoja no trae opciones, se usa data/catering.csv como respaldo.
     Columnas: Tipo (Opción o Extra), Nombre, Descripción (se acepta «Descipción»), Precio y Cobro
-    (por persona o fijo; las opciones siempre se cobran por persona)."""
+    (por persona, fijo o por unidad; las opciones siempre se cobran por persona) y Mínimo (solo para por unidad)."""
     url = config.get("pedidos_especiales", {}).get("catering_csv", "").strip()
     local = RAIZ / "data" / "catering.csv"
     if url:
@@ -144,13 +144,26 @@ def parsear_catering(texto):
         if tipo not in ("opcion", "extra"):
             print(f"::warning::Cotizador: «{nombre}» tiene Tipo «{campos.get('tipo', '')}»; tiene que ser Opción o Extra. Se ignora.")
             continue
-        persona = tipo == "opcion" or normalizar(campos.get("cobro", "")).endswith("persona")
-        (opciones if tipo == "opcion" else extras).append({
+        cobro_hoja = normalizar(campos.get("cobro", ""))
+        if tipo == "opcion":
+            if cobro_hoja.endswith("unidad"):
+                print(f"::warning::Cotizador: «{nombre}» es una Opción y no puede cobrarse por unidad; se cobra por persona.")
+            cobro = "persona"
+        elif cobro_hoja.endswith("persona"):
+            cobro = "persona"
+        elif cobro_hoja.endswith("unidad"):
+            cobro = "unidad"
+        else:
+            cobro = "fijo"
+        item = {
             "nombre": nombre,
             "detalle": campos.get("descripcion") or campos.get("descipcion", ""),
             "precio": parsear_precio(campos.get("precio", "")) or 0,
-            "cobro": "persona" if persona else "fijo",
-        })
+            "cobro": cobro,
+        }
+        if cobro == "unidad":
+            item["minimo"] = parsear_minimo(campos.get("minimo", ""), nombre)
+        (opciones if tipo == "opcion" else extras).append(item)
     return {"opciones": opciones, "extras": extras}
 
 
@@ -160,6 +173,18 @@ def parsear_precio(valor):
         return round(float(limpio))
     except ValueError:
         return None
+
+
+def parsear_minimo(valor, nombre):
+    """Mínimo de unidades de un extra «por unidad»: entero desde 1; si falta o no sirve, 1 y un aviso."""
+    try:
+        minimo = int(valor)
+        if minimo >= 1:
+            return minimo
+    except ValueError:
+        pass
+    print(f"::warning::Cotizador: «{nombre}» es por unidad pero su Mínimo («{valor}») no es un entero desde 1; se usa 1.")
+    return 1
 
 
 def revisar_fotos(productos):
