@@ -89,7 +89,7 @@ de datos.
   |---|---|---|---|
   | `por persona` | `Precio × cantidad de invitados` | `$6.500 por invitado`; en la comanda, `30 × $6.500` | `Opción,Mesa de panificados,,6500,por persona` |
   | `fijo` | `Precio`, una sola vez, sin importar los invitados | `$12.000` | `Extra,Entrega en CABA,,12000,fijo` |
-  | `por unidad` | `Precio × unidades`, una sola vez, sin importar los invitados; solo en extras | `$9.000` y el mínimo (la pantalla del selector de cantidad todavía no está hecha) | `Extra,Docena de empanadas,,9000,por unidad,2` (`Mínimo` es la última columna) |
+  | `por unidad` | `Precio × unidades`, una sola vez, sin importar los invitados; solo en extras | `$9.000 por unidad` y `Mínimo: 2 unidades`; al tildarlo aparece un selector de cantidad que arranca en el mínimo, no baja de él y sí sube; en la comanda, `4 × $9.000` | `Extra,Docena de empanadas,,9000,por unidad,2` (`Mínimo` es la última columna) |
 
   Reglas que conviene tener presentes:
   - Las **opciones** (`Tipo` = `Opción`) siempre se cobran por persona, diga lo

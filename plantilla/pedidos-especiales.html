@@ -36,6 +36,19 @@
   .opcion strong { font-weight: 700; }
   .opcion small { color: var(--suave); font-size: .9rem; }
   .opcion .precio { font-weight: 800; white-space: nowrap; text-align: right; font-size: .92rem; font-variant-numeric: tabular-nums; }
+  /* Extras «por unidad»: la tarjeta suma, al tildarla, un selector de cantidad que no baja del mínimo */
+  .opcion-unidad { flex-direction: column; align-items: stretch; gap: 12px; cursor: default; }
+  .opcion-unidad .fila { display: flex; gap: 12px; align-items: flex-start; cursor: pointer; }
+  .opcion-unidad:not(:has(input[type=checkbox]:checked)) .cantidad { display: none; }
+  .cantidad { display: flex; align-items: center; gap: 8px; padding-left: 32px; }
+  .cantidad-rotulo { font-weight: 700; font-size: .95rem; margin-right: auto; }
+  .cantidad button {
+    width: 40px; height: 40px; flex: none; font: inherit; font-size: 1.3rem; line-height: 1; cursor: pointer;
+    color: var(--tinta); background: var(--papel); border: 1.5px solid var(--borde-control); border-radius: 10px;
+  }
+  .cantidad button:disabled { opacity: .4; cursor: default; }
+  .opcion .unidades { width: 64px; height: auto; margin: 0; text-align: center; appearance: textfield; -moz-appearance: textfield; }
+  .unidades::-webkit-outer-spin-button, .unidades::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
   .campos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
   .campo { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
   .campo label { font-weight: 700; font-size: .95rem; }
@@ -184,21 +197,42 @@
   }
 
   // Opciones y extras vienen de data/catering.csv (o del link "catering_csv").
-  // Las opciones se cobran por invitado; los extras, fijos o por invitado. Sin precio = «A consultar» y no suma.
-  const precioTexto = o => !o.precio ? "A consultar" : pesos(o.precio) + (o.cobro === "persona" ? " por invitado" : "");
+  // Las opciones se cobran por invitado; los extras, fijos, por invitado o por unidad (con un mínimo y una cantidad
+  // propia, que no depende de los invitados). Sin precio = «A consultar» y no suma.
+  const precioTexto = o => !o.precio ? "A consultar" : pesos(o.precio) + (o.cobro === "persona" ? " por invitado" : o.cobro === "unidad" ? " por unidad" : "");
+  const unidades = n => `${n} ${n === 1 ? "unidad" : "unidades"}`;
+  const minimoUnidad = o => Math.max(1, Math.floor(Number(o.minimo)) || 1);
   function pintar(tipo, lista, bloque, caja, marcarPrimera) {
     if (!lista.length) return;
     $(bloque).hidden = false;
-    $(caja).innerHTML = lista.map((o, i) => `
-      <label class="opcion">
+    $(caja).innerHTML = lista.map((o, i) => {
+      const porUnidad = o.cobro === "unidad";
+      const min = minimoUnidad(o);
+      const contenido = `
         <input type="checkbox" name="${tipo}" value="${i}" ${marcarPrimera && i === 0 ? "checked" : ""}>
-        <span class="texto"><strong>${esc(o.nombre)}</strong>${o.detalle ? `<small>${esc(o.detalle)}</small>` : ""}</span>
-        <span class="precio">${precioTexto(o)}</span>
-      </label>`).join("");
+        <span class="texto"><strong>${esc(o.nombre)}</strong>${o.detalle ? `<small>${esc(o.detalle)}</small>` : ""}${porUnidad ? `<small class="minimo-unidad">Mínimo: ${unidades(min)}</small>` : ""}</span>
+        <span class="precio">${precioTexto(o)}</span>`;
+      if (!porUnidad) return `<label class="opcion">${contenido}</label>`;
+      return `
+      <div class="opcion opcion-unidad">
+        <label class="fila">${contenido}</label>
+        <div class="cantidad">
+          <span class="cantidad-rotulo">Cantidad</span>
+          <button type="button" class="menos" data-i="${i}" aria-label="Una unidad menos de ${esc(o.nombre)}" disabled>−</button>
+          <input type="number" class="unidades" id="unidades-${i}" data-i="${i}" min="${min}" step="1" value="${min}" inputmode="numeric" aria-label="Cantidad de ${esc(o.nombre)}">
+          <button type="button" class="mas" data-i="${i}" aria-label="Una unidad más de ${esc(o.nombre)}">+</button>
+        </div>
+      </div>`;
+    }).join("");
   }
   pintar("opcion", DATOS.opciones, "bloque-opciones", "opciones", true);
   pintar("extra", DATOS.extras, "bloque-extras", "extras", false);
 
+  // Cantidad elegida de un extra por unidad: nunca menos que su mínimo, aunque el campo esté vacío o a medio escribir.
+  const cantidadUnidad = o => {
+    const campo = $(`unidades-${DATOS.extras.indexOf(o)}`);
+    return Math.max(minimoUnidad(o), Math.floor(Number(campo && campo.value)) || 0);
+  };
   const marcadas = (tipo, lista) =>
     [...document.querySelectorAll(`input[name=${tipo}]:checked`)].map(c => lista[+c.value]);
 
@@ -208,11 +242,12 @@
     const extras = marcadas("extra", DATOS.extras);
     const lineas = [...opciones.map(o => ["o", o]), ...extras.map(o => ["e", o])].map(([t, o]) => {
       const porPersona = o.cobro === "persona";
+      const cantidad = o.cobro === "unidad" ? cantidadUnidad(o) : 0;
       return {
         clave: t + (t === "o" ? DATOS.opciones : DATOS.extras).indexOf(o),
         nombre: o.nombre,
-        detalle: porPersona && o.precio ? `${personas} × ${pesos(o.precio)}` : "",
-        monto: o.precio ? (porPersona ? o.precio * personas : o.precio) : null,
+        detalle: o.precio ? (porPersona ? `${personas} × ${pesos(o.precio)}` : cantidad ? `${cantidad} × ${pesos(o.precio)}` : "") : (cantidad ? unidades(cantidad) : ""),
+        monto: o.precio ? (porPersona ? o.precio * personas : cantidad ? o.precio * cantidad : o.precio) : null,
       };
     });
     const total = lineas.reduce((suma, l) => suma + (l.monto || 0), 0);
@@ -227,7 +262,7 @@
       DATOS.mensaje,
       `Invitados: ${q.personas}`,
       q.opciones.length && `Incluye: ${q.opciones.map(o => o.nombre).join(", ")}`,
-      q.extras.length && `Extras: ${q.extras.map(o => o.nombre).join(", ")}`,
+      q.extras.length && `Extras: ${q.extras.map(o => o.cobro === "unidad" ? `${o.nombre} × ${cantidadUnidad(o)}` : o.nombre).join(", ")}`,
       fecha && `Fecha: ${fecha}`,
       zona && `Zona: ${zona}`,
       q.total && `Estimado de la web: ${pesos(q.total)}`,
@@ -282,6 +317,22 @@
     (si ? $("cerrar") : $("abrir")).focus();
   }
   document.addEventListener("keydown", e => { if (e.key === "Escape" && $("comanda").classList.contains("abierta")) abrir(false); });
+  // Selector de cantidad de los extras por unidad: − y + (sin bajar del mínimo) y el campo, que se corrige al salir.
+  const fijarUnidades = (campo, valor) => {
+    const min = +campo.min;
+    campo.value = Math.max(min, Math.floor(Number(valor)) || min);
+    campo.closest(".cantidad").querySelector(".menos").disabled = +campo.value <= min;
+  };
+  $("extras").addEventListener("click", e => {
+    const boton = e.target.closest(".menos, .mas");
+    if (!boton) return;
+    const campo = $(`unidades-${boton.dataset.i}`);
+    fijarUnidades(campo, (+campo.value || +campo.min) + (boton.classList.contains("mas") ? 1 : -1));
+    actualizar();
+  });
+  $("extras").addEventListener("change", e => {
+    if (e.target.classList.contains("unidades")) { fijarUnidades(e.target, e.target.value); actualizar(); }
+  });
   $("form").addEventListener("input", actualizar);
   $("form").addEventListener("submit", e => e.preventDefault());
 
