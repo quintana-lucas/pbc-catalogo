@@ -465,11 +465,12 @@ def pista_carrito():
     )
 
 
-def aviso_eventos():
+def aviso_eventos(modulo):
     """Aviso arriba del catálogo (sobre los filtros) que lleva a Catering; scrollea con el header."""
+    texto = modulo.get("banner") or "¿Tenés un evento? Mirá lo que ofrecemos"
     return (
         f'<div class="aviso-eventos"><div class="envoltura">'
-        f'<a href="{PAGINA_PEDIDOS}">¿Tenés un evento? Mirá lo que ofrecemos <span aria-hidden="true">→</span></a>'
+        f'<a href="{PAGINA_PEDIDOS}">{html.escape(texto)}</a>'
         f'</div></div>'
     )
 
@@ -610,7 +611,7 @@ def main():
         "{{REDES}}": redes(config, quienes, pedidos),
         "{{MODULO}}": modulo_nav("catalogo", pedidos),
         "{{MODAL_QUIENES}}": modal_quienes(config) if quienes == "modal" else "",
-        "{{AVISO_EVENTOS}}": aviso_eventos() if pedidos else "",
+        "{{AVISO_EVENTOS}}": aviso_eventos(config.get("pedidos_especiales", {})) if pedidos else "",
         "{{PISTA_CARRITO}}": pista_carrito() if pedidos else "",
         "{{DATOS}}": json.dumps(
             {
